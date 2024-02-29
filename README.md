@@ -1,7 +1,135 @@
-# **IAV - Navegación**
+# IAV - Práctica 2: Navegación
 
-## Replica el formato de documentación habitual
-
-Hay quien implementa el A* con una estructura de registro de nodo muy simple (el identificador del nodo y el coste f), sólo usa lista de apertura, se apoya en tener toda la información completa del grafo a mano (costes incluidos) y como estructura de datos auxiliar usa una cola de prioridad muy simple.
-
+> Hay quien implementa el A* con una estructura de registro de nodo muy simple (el identificador del nodo y el coste f), sólo usa lista de apertura, se apoya en tener toda la información completa del grafo a mano (costes incluidos) y como estructura de datos auxiliar usa una cola de prioridad muy simple.  
 Según el pseudocódigo que plantea Millington, la estructura de registro de nodo es más rica (identificador del nodo, conexión con el nodo padre, coste g y coste f), se usa una lista de apertura y una lista de cierre, no se asume que toda la información del grafo esté disponible y la cola de prioridad se implementa con BinaryHeap.
+
+## Autores
+- Yi (Laura) Wang Qiu [GitHub](https://github.com/LauraWangQiu)
+- Agustín Castro De Troya [GitHub](https://github.com/AgusCDT)
+- Ignacio Ligero Martín [GitHub](https://github.com/theligero)
+- Alfonso Jaime Rodulfo Guío [GitHub](https://github.com/ARodulfo)
+
+## Propuesta
+Este proyecto es una práctica de la asignatura de Inteligencia Artificial para Videojuegos del Grado en Desarrollo de Videojuegos de la UCM, cuyo enunciado original es este: [El secreto del laberinto](https://narratech.com/es/inteligencia-artificial-para-videojuegos/navegacion/el-secreto-del-laberinto/).
+
+Esta práctica consiste en ...
+
+## Punto de partida
+
+Se parte de un proyecto base de **Unity 2022.3.5f1** proporcionado por el profesor y disponible en este repositorio: [IAV-Navegación](https://github.com/Narratech/IAV-Navegacion)
+
+| Clases: AGENT | Información |
+| - | - |
+| Agente | ... |
+| Comportamiento Agente | ... |
+| Direccion | ... |
+
+| Clases: ANIMATION | Información |
+| - | - |
+| Animal Animation Controller | ... |
+| Camera Follow | ... |
+| Player Animator | ... |
+
+| Clases: ANIMATION | Información |
+| - | - |
+| Control Jugador | ... |
+| Llegada | ... |
+| Merodear | ... |
+| Mino Collision | ... |
+| Mino Evader | ... |
+| Mino Manager | ... |
+| Seguir Camino | ... |
+| Slow | ... |
+| Teseo | ... |
+
+| Clases: EXTRA | Información |
+| - | - |
+| Binary Heap | ... |
+| DropDown | ... |
+
+| Clases: GRAPH | Información |
+| - | - |
+| Graph | ... |
+| Graph Grid | ... |
+| Theseus Graph | ... |
+| Vertex | ... |
+
+| Clases: GAMEMANAGER | Información |
+| - | - |
+| GameManager | ... |
+
+## Diseño de la solución
+
+A.
+
+B.
+
+C.
+
+D.
+
+E.
+
+## Pruebas y métricas
+
+| Pruebas | Métricas | Links |
+|:-:|:-:|:-:|
+| **Característica A** | | |
+| | | _link no disponible_ |
+
+| Pruebas | Métricas | Links |
+|:-:|:-:|:-:|
+| **Característica B** | | |
+| | | _link no disponible_ |
+
+| Pruebas | Métricas | Links |
+|:-:|:-:|:-:|
+| **Característica C** | | |
+| | | _link no disponible_ |
+
+| Pruebas | Métricas | Links |
+|:-:|:-:|:-:|
+| **Característica D** | | |
+| | | _link no disponible_ |
+
+| Pruebas | Métricas | Links |
+|:-:|:-:|:-:|
+| **Característica E** | | |
+| | | _link no disponible_ |
+
+## Ampliaciones
+
+No se han realizado ampliaciones hasta el momento.
+
+## Producción
+
+Las tareas se han realizado y el esfuerzo ha sido repartido entre los autores. Observa la tabla de abajo para ver el estado y las fechas de realización de las mismas. Puedes visitar nuestro proyecto de GitHub en el siguiente [link](https://github.com/orgs/IAV24-G02/projects/2/).
+
+| Estado  |  Tarea  |  Fecha  |  
+|:-:|:--|:-:|
+|  | Diseño: Primer borrador | ..-..-2024 |
+|  | Característica A | ..-..-2024 |
+|  | Característica B | ..-..-2024 |
+|  | Característica C | ..-..-2024 |
+|  | Característica D | ..-..-2024 |
+|  | Característica E | ..-..-2024 |
+|  | **OTROS** | |
+|  |  | ..-..-2024 |
+|  |  **OPCIONALES**  | |
+|  |  | ..-..-2024 |
+|  |  | ..-..-2024 |
+
+## Licencia
+
+Yi (Laura) Wang Qiu, Agustín Castro De Troya, Ignacio Ligero Martín, Alfonso Jaime Rodulfo Guío, autores de la documentación, código y recursos de este trabajo, concedemos permiso permanente a los profesores de la Facultad de Informática de la Universidad Complutense de Madrid para utilizar nuestro material, con sus comentarios y evaluaciones, con fines educativos o de investigación; ya sea para obtener datos agregados de forma anónima como para utilizarlo total o parcialmente reconociendo expresamente nuestra autoría.
+
+Una vez superada con éxito la asignatura se prevee publicar todo en abierto (la documentación con licencia Creative Commons Attribution 4.0 International (CC BY 4.0) y el código con licencia GNU Lesser General Public License 3.0).
+
+## Referencias
+
+Los recursos de terceros utilizados son de uso público.
+
+- *AI for Games*, Ian Millington.
+- [Kaykit Medieval Builder Pack](https://kaylousberg.itch.io/kaykit-medieval-builder-pack)
+- [Kaykit Dungeon](https://kaylousberg.itch.io/kaykit-dungeon)
+- [Kaykit Animations](https://kaylousberg.itch.io/kaykit-animations)
