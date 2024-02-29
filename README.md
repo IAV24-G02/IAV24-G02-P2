@@ -20,21 +20,24 @@ Se parte de un proyecto base de **Unity 2022.3.5f1** proporcionado por el profes
 
 | Clases: AGENT | Información |
 | - | - |
-| Agente | ... |
-| Comportamiento Agente | ... |
-| Direccion | ... |
+| Agente | Explicado en la [Práctica 1: Movimiento](https://github.com/IAV24-G02/IAV24-G02-P1) |
+| Comportamiento Agente | Explicado en la [Práctica 1: Movimiento](https://github.com/IAV24-G02/IAV24-G02-P1) |
+| Direccion | Explicado en la [Práctica 1: Movimiento](https://github.com/IAV24-G02/IAV24-G02-P1) |
 
 | Clases: ANIMATION | Información |
 | - | - |
-| Animal Animation Controller | ... |
-| Camera Follow | ... |
-| Player Animator | ... |
+| Animal Animation Controller | Explicado en la [Práctica 1: Movimiento](https://github.com/IAV24-G02/IAV24-G02-P1) |
+| Camera Follow | Explicado en la [Práctica 1: Movimiento](https://github.com/IAV24-G02/IAV24-G02-P1) |
+| Player Animator | Explicado en la [Práctica 1: Movimiento](https://github.com/IAV24-G02/IAV24-G02-P1) |
 
 | Clases: ANIMATION | Información |
 | - | - |
-| Control Jugador | ... |
-| Llegada | ... |
-| Merodear | ... |
+| Control Jugador | Explicado en la [Práctica 1: Movimiento](https://github.com/IAV24-G02/IAV24-G02-P1) |
+| Llegada | Explicado en la [Práctica 1: Movimiento](https://github.com/IAV24-G02/IAV24-G02-P1) |
+| Merodear | Explicado en la [Práctica 1: Movimiento](https://github.com/IAV24-G02/IAV24-G02-P1) |
+
+| Clases: ANIMATION | Información |
+| - | - |
 | Mino Collision | ... |
 | Mino Evader | ... |
 | Mino Manager | ... |
@@ -60,15 +63,9 @@ Se parte de un proyecto base de **Unity 2022.3.5f1** proporcionado por el profes
 
 ## Diseño de la solución
 
-A.
-
-B.
-
 C.
 
 D.
-
-E.
 
 ## Pruebas y métricas
 
@@ -133,3 +130,8 @@ Los recursos de terceros utilizados son de uso público.
 - [Kaykit Medieval Builder Pack](https://kaylousberg.itch.io/kaykit-medieval-builder-pack)
 - [Kaykit Dungeon](https://kaylousberg.itch.io/kaykit-dungeon)
 - [Kaykit Animations](https://kaylousberg.itch.io/kaykit-animations)
+
+- Unity 2018 Artificial Intelligence Cookbook, Second Edition (Repositorio)
+https://github.com/PacktPublishing/Unity-2018-Artificial-Intelligence-Cookbook-Second-Edition 
+- Unity Artificial Intelligence Programming, 5th Edition (Repositorio)
+https://github.com/PacktPublishing/Unity-Artificial-Intelligence-Programming-Fifth-Edition : Unity Artificial Intelligence Programming – Fifth Edition, published by Packt (github.com)
