@@ -12,7 +12,7 @@ Según el pseudocódigo que plantea Millington, la estructura de registro de nod
 ## Propuesta
 Este proyecto es una práctica de la asignatura de Inteligencia Artificial para Videojuegos del Grado en Desarrollo de Videojuegos de la UCM, cuyo enunciado original es este: [El secreto del laberinto](https://narratech.com/es/inteligencia-artificial-para-videojuegos/navegacion/el-secreto-del-laberinto/).
 
-Esta práctica consiste en ...
+Esta práctica consiste en recrear un prototipo basado en el mito griego del hilo de Ariadna. La idea es que el jugador controle a `Teseo`, que debe encontrar la salida del laberinto, mientras es perseguido por el `Minotauro`. El laberinto es un grafo que se genera aleatoriamente y el `Minotauro` debe seguir un camino que le lleve a `Teseo`. Si `Teseo` es atrapado por el `Minotauro`, el nivel se reinicia.
 
 ## Punto de partida
 
@@ -38,9 +38,9 @@ Se parte de un proyecto base de **Unity 2022.3.5f1** proporcionado por el profes
 
 | Clases: ANIMATION | Información |
 | - | - |
-| Mino Collision | ... |
-| Mino Evader | ... |
-| Mino Manager | ... |
+| Mino Collision | OnCollisionEnter(Collision collision): En una colisión, por DuckTyping, detecta si se trata del `Teseo` y si es el caso, reinicia el nivel. |
+| Mino Evader | OnTriggerEnter(Collider other): En una colisión con un _trigger_, por DuckTyping, detecta si se trata del `Minotauro` y si también tiene el componente **Seguir Camino**, se resetea su camino. |
+| Mino Manager | Busca en la escena si existe el GameObject "GraphGrid", coge referencia a su componente **GraphGrid** y genera un número de `Minotauros` en posiciones aleatorias. |
 | Seguir Camino | ... |
 | Slow | ... |
 | Teseo | ... |
