@@ -41,9 +41,13 @@ Se parte de un proyecto base de **Unity 2022.3.5f1** proporcionado por el profes
 | Mino Collision | OnCollisionEnter(Collision collision): En una colisión, por DuckTyping, detecta si se trata del `Teseo` y si es el caso, reinicia el nivel. |
 | Mino Evader | OnTriggerEnter(Collider other): En una colisión con un _trigger_, por DuckTyping, detecta si se trata del `Minotauro` y si también tiene el componente **Seguir Camino**, se resetea su camino. |
 | Mino Manager | Busca en la escena si existe el GameObject "GraphGrid", coge referencia a su componente **GraphGrid** y genera un número de `Minotauros` en posiciones aleatorias. |
-| Seguir Camino | ... |
-| Slow | ... |
-| Teseo | ... |
+| Seguir Camino | La clase "SeguirCamino", se encarga de hacer uso del grafo de Teseo que indica el camino que automáticamente debe seguir Teseo cuando su moivimiento no es establecido por el jugador.
+La clase elige el siguiente nodo del grafo y actualiza la dirección del avatar en función de la posicion de este. Además aporta un método para resetear el grafo de Teseo. |
+| Slow | Esta clase se encarga de ralentizar al avatar cuando se encuentra dentro del trigger del minotauro. Para indentificar si lo que entre y/o sale dentro del collider es el avatar, chequea si el Game Object tiene el componente
+"ControlJugador", y en caso afirmativo se da por hecho que es el avatar. Cuando el avatar entre en el collider, la velocidad máxima del componente Agente del avatar es reducida a uno, y al salir del collider, la velocidad máxima es 
+devuelta a su valor original.  |
+| Teseo | Esta clase se encarga de altenar entre los dos posibles comportamientos del avatar. Tiene variables para almacenar sendas referencias a los componentes de "SeguirCamino" y de "ControlJugador" que el avatar tiene incorporados.
+Si el jugador presiona la tecla espacio, la clase Teseo se encarga de hacerque el avatar siga un camino automáticamente creado con el algoritmo A*. En caso contrario, el jugador tendrá el control del avatar. |
 
 | Clases: EXTRA | Información |
 | - | - |
