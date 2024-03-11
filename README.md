@@ -56,11 +56,10 @@ Si el jugador presiona la tecla espacio, la clase Teseo se encarga de hacerque e
 
 | Clases: GRAPH | Información |
 | - | - |
-| Graph | ... |
-| Graph Grid | ... |
-| Theseus Graph | ... |
-| Vertex | ... |
-
+| Graph | Aquí implementaremos la mayoría de lo que se pide en la práctica. Contiene listas para representar el grafo y métodos para obtener los nodos vecinos y sus costes. Además un método para BuilPath() para reconstruir el camino que da la vuelta a los nodos anotados. |
+| Graph Grid | Script que genera el mapa, sus métodos principales son: LoadMap(string filename) que lee el mapa de archivo, genera el terreno y lee los nodos vecinos; SetNeighbours(int x, int y, bool get8 = false)el cuál coloca los nodos vecinos en el terreno; GetNearestVertex(Vector3 position)que mientras haya nodos en la cola, busca el nodo más próximo; GetRandomPos() devuelve posición aleatoria del mapa; UpdateVertexCost(Vector3 position, float costMultiplier) actualiza el coste de los nodos; WallInstantiate(Vector3 position, int i, int j) se encarga de colocar en escena todos los muros del escenario. |
+| Theseus Graph | Gestiona qué algoritmo utilizar. Inicializa objetos para la cámara, el Avatar y el hilo que se dibujará al hacer el Avatar el camino, además de las propiedades del propio hilo(anchura). Su método Update() controla si se pulsa la tecla "Espacio" la cuál activa el hilo, y en otro caso lo desactiva. Si se pulsa la tecla "S" activa/desactiva el camino suavizado. Luego si el hilo está activado elige el algoritmo a utilizar, comprueba si estará suavizado y dibuja el hilo(llamada a DibujaHilo()); OnDrawGizmos() que dibuja las esferas en las baldosas y las líneas del hilo; ShowPathVertices(List<Vertex> path, Color color)el cuál recorre el camino mostrándolo de un color; GetNodeFromScreen(Vector3 screenPosition)que mediante RayCast traduce las posiciones en la pantalla a los nodos; DibujaHilo() setea las posiciones donde el hilo de Ariadna se dibujará; updateAriadna(bool ar) según el valor del booleano activa/desactiva el hilo; ChangeHeuristic()que cambia la heurística del algoritmo; ResetPath() pone a null el camino. |
+| Vertex | Clase para representar los vértices. Contiene métodos para comparar los costes entre vértices o para saber si un vérice es igual a otro. |
 | Clases: GAMEMANAGER | Información |
 | - | - |
 | GameManager | ... |
