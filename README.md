@@ -248,7 +248,8 @@ D.
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica B** | | |
-| | | _link no disponible_ |
+| Comprobar que al configurar más minotauros el merodeo sigue funcionando. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Diversos números de minotauros. | _link no disponible_ |
+| Comprobar que los distintos minotauros detectan al `Avatar` cuando entran en su rango de detección y le persiguen. | Diversos números de minotauros. | _link no disponible_ |  
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
