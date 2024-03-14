@@ -51,8 +51,8 @@ Si el jugador presiona la tecla espacio, la clase Teseo se encarga de hacerque e
 
 | Clases: EXTRA | Información |
 | - | - |
-| Binary Heap | ... |
-| DropDown | ... |
+| Binary Heap | Clase montículo binario para C#. Es una estructura de datos en forma de árbol binario balanceado. Tiene un tamaño predeterminado, un array de tipo `T` del tamaño previamente mencionado, un entero de elementos en uso, otro entero del tamaño que se inicializa con el tamaño predeterminado y un booleano que determina si está internamente ordenado. Además, cuenta con métodos para eliminar todos los elementos del montículo, o agregar / eliminar elementos o decir si tiene o no un elemento concreto. |
+| DropDown | Clase que se subdivide en dos casos concretos: en si el booleano mino está activo o no. Mientras que en ambos casos se añade un _listener_ al GameObject que contiene el componente Dropdown, en el caso de que mino no esté activo se llama al método `changeSize()` y en el caso de que sí esté activo se llama al método `setNumNinos()`. En resumen, este método se utiliza dentro del menú de inicio para mandarle al GameManager los parámetros que el jugador ha seleccionado previamente, como es el caso del tamaño del mapa o el número de minotauros. |
 
 | Clases: GRAPH | Información |
 | - | - |
@@ -62,7 +62,7 @@ Si el jugador presiona la tecla espacio, la clase Teseo se encarga de hacerque e
 | Vertex | Clase para representar los vértices. Contiene métodos para comparar los costes entre vértices o para saber si un vérice es igual a otro. |
 | Clases: GAMEMANAGER | Información |
 | - | - |
-| GameManager | ... |
+| GameManager | Clase que gestiona todo lo relativo a la propia partida. En primer lugar está la interfaz gráfica, que durante la sección del menú principal, muestra un menú de configuración para establecer el tipo de mapa (10x10, 20x20 o 30x30) y la cantidad de minotauros en la partida. A continuación, en base a los datos previamente pedidos al usuario, se carga una de las tres escenas y guarda el valor del número de minotauros que van a aparecer en la partida. Una vez ésta se ha iniciado, se coloca una interfaz gráfica en la esquina superior izquierda donde aparezca la tasa de fotogramas por segundo y diversas configuraciones que se pueden habilitar a través de distintas teclas del teclado (como el cambio de tasa de fotogramas). Tiene distintos métodos de tipo "getters" (como el tamaño del laberinto, el número de minotauros o el jugador) y "setters" (como la zona de inicio y fin del laberinto o el número de minotauros), así como un buscador de GameObjects, reinicio de escena, carga de escenas... |
 
 ## Diseño de la solución
 
