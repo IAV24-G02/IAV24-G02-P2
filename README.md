@@ -260,7 +260,8 @@ D.
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica D** | | |
-| | | _link no disponible_ |
+| Comprobar que el suavizado de A* se activa/desactiva al usar la opción de la interfaz, y el camino cambia. | Cambio de suavizado mediante la opicón de la interfaz. | _link no disponible_ |
+| Comprobar si el suavizado se realiza correctamente con las diversas heurísticas. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
