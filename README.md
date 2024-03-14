@@ -236,7 +236,52 @@ class Graph:
 
 ```
 
-D.
+D. El propio algoritmo de A* requerirá un suavizado si queremos que el personaje encuentre el camino correctamente y éste llegue a su destino. Para ello, se recurrirá al libro _AI for Games_ de Ian Millington. En dicho libro, Millington menciona que los grafos basados en mosaicos pueden en ocasiones ser algo erráticos por lo que, para que la inteligencia artificial parezca medianamente inteligente, se utilizan adicionalmente comportamientos de dirección como los vistos en la práctica anterior que hagan suavizar dichos movimientos. Estos comportamientos son esenciales si se quiere que las IA parezcan inteligentes en su comportamiento y, aunque sea fácil de implementar, requiere consultas constantes a nivel de geometría, por lo que el rendimiento puede en consecuencia verse afectado.
+
+Para suavizar el camino de entrada, primero se crea un nuevo camino vacío, que será el camino de salida, y tendrá como punto de inicio y destino los mismos que el de entrada. Comenzando desde el tercer nodo del camino de entrada, se traza un rayo a cada nodo sucesivamente desde el último nodo del camino de salida (nótese que se asume que hay una clara línea entre los nodos primero y segundo). Si un rayo falla, el nodo anterior del camino de entrada es añadido al de salida. El trazado de rayos vuelve a empezar desde el nodo siguiente del camino de entrada. Cuando se alcanza el último nodo, se añade al camino de salida. La siguiente imagen muestra un camino que ha sido suavizado por éste algoritmo:
+
+![image](https://github.com/IAV24-G02/IAV24-G02-P2/assets/82498461/de9048db-8b09-4716-9e90-787151e6bb40)
+
+
+Aunque dicho algoritmo produce un camino suavizado, éste no busca todos los posibles caminos suavizados hasta encontrar el más adecuado. La anterior imagen muestra el camino más suavizado, pero no se puede generar por el propio algoritmo. Esto se debe a que habría que hacer una búsqueda de todos los posibles caminoz suavizados, lo cual no será ni siquiera necesario.
+
+Millington, en base a lo explicado anteriormente, plantea el siguiente _pseudo-código_, donde se acepta un camino de nodos ya establecido sin suavizar y lo devuelve suavizado:
+
+```
+
+function smoothPath(inputPath: Vector[]) -> Vector[]:
+    # Si el camino es solo de dos nodos de longitud, entonces no se puede
+    # suavizar
+    if len(inputPath) == 2:
+        return inputPath
+    # Compilar un camino de salida
+    outputPath = [inputPath[0]]
+    
+    # Se hace un seguimiento de la posición en la que se encuentra. Se empieza con dos,
+    # ya que se asume que dos nodos adyacentes pasarán el trazado del rayo
+    inputIndex: int = 2
+
+    # Loop until we find the last item in the input.
+    while inputIndex < len(inputPath) - 1:
+        # Hacer el trazado del rayo
+        fromPt = outputPath[len(outputPath) - 1]
+        toPt = inputPath[inputIndex]
+        if not rayClear(fromPt, toPt):
+            # Si el trazado de rayo ha fallado, se añade el último nodo al final
+            # de la lista de salida
+            outputPath += inputPath[inputIndex - 1]
+
+    # Se considera el siguiente nodo
+    inputIndex ++
+
+    # Se ha llegado al final del camino de entrada, por lo que se añade el último
+    # nodo al de salida y se devuelve
+    outputPath += inputPath[len(inputPath) - 1]
+
+    return outputPath
+
+```
+
 
 ## Pruebas y métricas
 
