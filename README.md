@@ -66,7 +66,179 @@ Si el jugador presiona la tecla espacio, la clase Teseo se encarga de hacerque e
 
 ## Diseño de la solución
 
-C.
+C. El pseudocódigo del algoritmo A* es el siguiente:
+
+```pseudo
+# Estructura de nodo: contiene solamente su identificador y tiene métodos para comparar nodos
+class Vertex:
+    id : int    # Identificador del nodo
+
+    # Comprueba si es el mismo nodo a partir de su id
+    function Equals(Vertex other) -> bool:
+        return id == other.id
+
+    # Comprueba si es el mismo nodo objeto
+    function Equals(object other) -> bool:
+        return Equals(other as Vertex)
+
+    # Devuelve el hash code del nodo
+    function GetHashCode() -> int:
+        return id.GetHashCode()
+
+# Estructura de conexión/arista: contiene el nodo origen, el nodo destino y el coste de la conexión/arista
+class Connection:
+    fromNode : Vertex   # Nodo origen
+    toNode : Vertex     # Nodo destino
+    cost : float        # Coste de la conexión
+
+    # Devuelve el nodo origen
+    function getFromNode() -> Vertex:
+        return fromNode
+
+    # Devuelve el nodo destino
+    function getToNode() -> Vertex:
+        return toNode
+
+    # Devuelve el coste de la conexión
+    function getCost() -> float:
+        return cost
+
+# Estructura de heurística: contiene el nodo objetivo y tiene un método para estimar el coste entre dos nodos
+class Heuristic:
+    goalNode : Vertex   # Nodo objetivo
+
+    # Estima el coste entre dos nodos
+    function estimate(fromNode : Vertex) -> float:
+        return estimate(fromNode, goalNode)
+
+    # Estima el coste entre dos nodos
+    function estimate(fromNode : Vertex, toNode : Vertex) -> float
+        
+
+# Estructura de Grafo: representación de una escena de juego como un grafo
+class Graph:
+    vertices : Vertex[]         # Lista de nodos
+    neighbours : Vertex[][]     # Lista de nodos vecinos a partir de cada nodo
+    costs : float[][]           # Lista de costes entre nodos
+    mapVertices : bool[][]      # Mapa de nodos
+    costsVertices : float[][]   # Coste acumulado entre nodos
+    numCols : int               # Número de columnas
+    numRows : int               # Número de filas
+    path : Vertex[]             # Camino solución
+
+    # Algoritmo A* para encontrar el camino más corto entre dos nodos de un grafo con pesos no negativos y dirigido
+    # start : Nodo de inicio
+    # end : Nodo de fin
+    # heuristic : Heurística a utilizar
+    function pathfindStar(start : Vertex, end : Vertex, heuristic : Heuristic) -> Vertex[]:
+
+        # Estructura de registro de nodo que incluye el nodo, la conexión, el coste hasta el momento y el coste total estimado
+        class NodeRecord:
+            node : Vertex               # Nodo seleccionado
+            connection : Connection     # Conexión seleccionada a partir del nodo seleccionado
+            costSoFar: float            # Coste acumulado hasta el nodo seleccionado
+            estimatedTotalCost: float   # Coste total estimado hasta el nodo seleccionado
+        
+        # Estructura de lista de nodos para pathfinding
+        class PathFindingList:
+            # Lista de nodos
+            records : NodeRecord[]
+
+            # Añade un nodo a la lista
+            function add(nodeRecord : NodeRecord):
+                records += nodeRecord
+
+            # Elimina un nodo de la lista
+            function remove(nodeRecord : NodeRecord):
+                records -= nodeRecord
+
+            # Comprueba si la lista contiene un nodo
+            function contains(node : Vertex) -> bool:
+                return records.find(node).length > 0
+
+            # Encuentra un nodo en la lista
+            function find(node : Vertex) -> NodeRecord:
+                return records.find(node)
+
+            # Devuelve el nodo con menor coste total estimado
+            function smallestElement() -> NodeRecord:
+                return records.minBy(record => record.estimatedTotalCost)
+
+        # Inicializa el nodo de inicio
+        startRecord = new NodeRecord()
+        startRecord.node = start
+        startRecord.connection = null
+        startRecord.costSoFar = 0
+        startRecord.estimatedTotalCost = heuristic.estimate(start)
+
+        # Initialize the open and close lists
+        open = new PathfindingList()
+        open.add(startRecord)
+        closed = new PathfindingList()
+
+        # Mientras haya nodos en la lista abierta
+        while length(open) > 0:
+            # Coge el nodo con menor coste total estimado
+            current = open.smallestElement() *cola de prioridad de mínimos*
+            
+            # Si el nodo es el nodo de fin, termina
+            if current.node == goal:
+                break
+
+            # Si no, coge las conexiones que hay entre el nodo actual y sus vecinos
+            connections = graph.GetNeighbours(current)
+
+            # Itera sobre las conexiones para cada nodo vecino
+            for connection in connections:
+                # Coge el nodo vecino
+                endNode = connection.getToNode()
+                endNodeCost = current.costSoFar + connection.getCost() *f = g + h*
+
+                # Si el nodo vecino está en la lista cerrada, continúa
+                if closed.contains(endNode):
+                    continue
+
+                # Si el nodo vecino está en la lista abierta
+                else if open.contains(endNode):
+
+                    # Coge el registro del nodo vecino de la lista abierta
+                    endNodeRecord = open.find(endNode)
+
+                    if endNodeRecord.costSoFar <= endNodeCost:
+                        continue
+                
+                # Si no, crea un registro para el nodo vecino
+                else:
+                    endNodeRecord = new NodeRecord()
+                    endNodeRecord.node = endNode
+                
+                endNodeRecord.cost = endNodeCost
+                endNodeRecord.connection = connection
+
+                # Si el nodo vecino no está en la lista abierta, se añade
+                if not open.contains(endNode):
+                    open.add(endNodeRecord)
+
+            # Se quita el nodo de la lista abierta y se añade a la lista cerrada
+            open.remove(current)
+            closed.add(current)
+
+        # Si no se ha encontrado el nodo de fin, no hay solución
+        if current.node != goal:
+            return null
+
+        else:
+
+            path = []
+            # Reconstruye el camino
+            while current.node != start:
+                path.add(current.connection)
+                current = current.connection.getFromNode()
+
+            # Devuelve el camino reconstruido en orden inverso
+            return reverse(path)
+
+```
 
 D.
 
@@ -75,7 +247,7 @@ D.
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica A** | | |
-| | | _link no disponible_ |
+| Comprobar que funcione la navegación del `Avatar` con el clic izquierdo | Comprobar el cambio de representación del hilo con la implicación del `Minotauro` | Distintos tamaños de mapa: 10x10, 20x20, 30x30 | _link no disponible_ |
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
@@ -85,7 +257,8 @@ D.
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica C** | | |
-| | | _link no disponible_ |
+| Comprobar que se activa el pintado de la línea blanca (hilo) y esferas blancas durante la navegación | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
+| Comprobar el cambio de representación del hilo con la implicación del `Minotauro` | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
@@ -95,7 +268,8 @@ D.
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica E** | | |
-| | | _link no disponible_ |
+| Comprobar que se desactive parte del hilo y esferas por las zonas según el `Avatar` va navegando automáticamente | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
+| Comprobar que se desactive el hilo y las esferas cuando se navega manualmente | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
 
 ## Ampliaciones
 
