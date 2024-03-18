@@ -109,24 +109,33 @@ class Heuristic:
 
     # Estima el coste entre dos nodos
     function estimate(fromNode : Vertex, toNode : Vertex) -> float
-        
 
 # Estructura de Grafo: representación de una escena de juego como un grafo
 class Graph:
-    vertices : Vertex[]         # Lista de nodos
-    neighbours : Vertex[][]     # Lista de nodos vecinos a partir de cada nodo
-    costs : float[][]           # Lista de costes entre nodos
-    mapVertices : bool[][]      # Mapa de nodos
-    costsVertices : float[][]   # Coste acumulado entre nodos
-    numCols : int               # Número de columnas
-    numRows : int               # Número de filas
-    path : Vertex[]             # Camino solución
+    vertices : Vertex[]                 # Lista de nodos
+    neighbours : Vertex[][]             # Lista de nodos vecinos a partir de cada nodo
+    costs : float[][]                   # Lista de costes entre nodos
+    mapVertices : bool[][]              # Mapa de nodos
+    costsVertices : float[][]           # Coste acumulado entre nodos
+    numCols : int                       # Número de columnas
+    numRows : int                       # Número de filas
+    path : Vertex[]                     # Camino solución
+    neighbourConnections : Connection[] # Conexiones de los nodos vecinos
+
+    # Devuelve las conexiones a partir de vertex y sus vecinos
+    function Connection[] GetConnectionNeighbours(Vertex vertex) -> Connection[]:
+        connections : Connection[]
+
+        for Connection connection in neighbourConnections:
+            if connection.getFromNode() == vertex:
+                connections.add(connection)
+        return connections
 
     # Algoritmo A* para encontrar el camino más corto entre dos nodos de un grafo con pesos no negativos y dirigido
     # start : Nodo de inicio
     # end : Nodo de fin
     # heuristic : Heurística a utilizar
-    function pathfindStar(start : Vertex, end : Vertex, heuristic : Heuristic) -> Vertex[]:
+    function pathfindStar(startObj : GameObject, endObj : GameObject, heuristic : Heuristic) -> Vertex[]:
 
         # Estructura de registro de nodo que incluye el nodo, la conexión, el coste hasta el momento y el coste total estimado
         class NodeRecord:
@@ -134,6 +143,7 @@ class Graph:
             connection : Connection     # Conexión seleccionada a partir del nodo seleccionado
             costSoFar: float            # Coste acumulado hasta el nodo seleccionado
             estimatedTotalCost: float   # Coste total estimado hasta el nodo seleccionado
+            cost: float                 # Coste actual
         
         # Estructura de lista de nodos para pathfinding
         class PathFindingList:
@@ -161,16 +171,18 @@ class Graph:
                 return records.minBy(record => record.estimatedTotalCost)
 
         # Inicializa el nodo de inicio
+        Vertex goalNode = GetNearestVertex(endObj.transform.position)
         startRecord = new NodeRecord()
-        startRecord.node = start
+        startRecord.node = GetNearestVertex(startObj.transform.position)
         startRecord.connection = null
         startRecord.costSoFar = 0
-        startRecord.estimatedTotalCost = heuristic.estimate(start)
+        startRecord.estimatedTotalCost = heuristic.estimate(startRecord.node, goalNode)
 
         # Initialize the open and close lists
         open = new PathfindingList()
         open.add(startRecord)
         closed = new PathfindingList()
+        NodeRecord current = new NodeRecord()
 
         # Mientras haya nodos en la lista abierta
         while length(open) > 0:
@@ -182,18 +194,29 @@ class Graph:
                 break
 
             # Si no, coge las conexiones que hay entre el nodo actual y sus vecinos
-            connections = graph.GetNeighbours(current)
+            connections : Connection[] = GetConnectionNeighbours(current.node)
 
             # Itera sobre las conexiones para cada nodo vecino
             for connection in connections:
                 # Coge el nodo vecino
                 endNode = connection.getToNode()
                 endNodeCost = current.costSoFar + connection.getCost() *f = g + h*
+                endNodeRecord = new NodeRecord()
+                endNodeHeuristic : float
 
                 # Si el nodo vecino está en la lista cerrada, continúa
                 if closed.contains(endNode):
-                    continue
+                    endNodeRecord = closed.find(endNode)
 
+                    # Si sigue siendo más barato, continúa
+                    if endNodeRecord.costSoFar <= endNodeCost:
+                        continue
+
+                    # Si no, se quita de la lista cerrada
+                    closed.remove(endNodeRecord)
+
+                    endNodeHeuristic = endNodeRecord.estimatedTotalCost - endNodeRecord.costSoFar
+                    
                 # Si el nodo vecino está en la lista abierta
                 else if open.contains(endNode):
 
@@ -202,14 +225,18 @@ class Graph:
 
                     if endNodeRecord.costSoFar <= endNodeCost:
                         continue
+
+                    endNodeHeuristic = endNodeRecord.cost - endNodeRecord.costSoFar
                 
                 # Si no, crea un registro para el nodo vecino
                 else:
                     endNodeRecord = new NodeRecord()
                     endNodeRecord.node = endNode
+                    endNodeHeuristic = heuristic.estimate(endNode, goalNode)
                 
                 endNodeRecord.cost = endNodeCost
                 endNodeRecord.connection = connection
+                endNodeRecord.estimatedTotalCost = endNodeCost + endNodeHeuristic
 
                 # Si el nodo vecino no está en la lista abierta, se añade
                 if not open.contains(endNode):
@@ -224,7 +251,6 @@ class Graph:
             return null
 
         else:
-
             path = []
             # Reconstruye el camino
             while current.node != start:
