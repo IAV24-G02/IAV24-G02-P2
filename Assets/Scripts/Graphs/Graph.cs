@@ -12,6 +12,8 @@ namespace UCM.IAV.Navegacion
     using UnityEngine;
     using System.Collections;
     using System.Collections.Generic;
+    using Unity.PlasticSCM.Editor.WebApi;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// Abstract class for graphs
@@ -27,6 +29,7 @@ namespace UCM.IAV.Navegacion
         protected bool[,] mapVertices;
         protected float[,] costsVertices;
         protected int numCols, numRows;
+        protected List<Connection> neighbourConnections;
 
         // this is for informed search like A*
         // Un delegado especifica la cabecera de una función, la que sea, que cumpla con esos parámetros y devuelva ese tipo.
@@ -54,13 +57,25 @@ namespace UCM.IAV.Navegacion
         public virtual void UpdateVertexCost(Vector3 position, float costMultipliyer) { }
 
         public virtual Vertex GetNearestVertex(Vector3 position)
-        {
+        {         
             return null;
         }
 
         public virtual GameObject GetRandomPos()
         {
             return null;
+        }
+        public virtual List<Connection> GetConnectionNeighbours(Vertex v)
+        {
+            List<Connection> connections = new List<Connection>();
+            foreach (Connection connection in neighbourConnections)
+            {
+                if (connection.FromNode == v)
+                {
+                    connections.Add(connection);
+                }
+            }
+            return connections;
         }
 
         public virtual Vertex[] GetNeighbours(Vertex v)
@@ -102,10 +117,95 @@ namespace UCM.IAV.Navegacion
             return new List<Vertex>();
         }
 
-        public List<Vertex> GetPathAstar(GameObject srcO, GameObject dstO, Heuristic h = null)
+        public List<Vertex> GetPathAstar(GameObject startObject, GameObject endObject, Heuristic h = null)
         {
             // IMPLEMENTAR ALGORITMO A*
-            return new List<Vertex>();
+            Vertex goalNode = GetNearestVertex(endObject.transform.position);
+            NodeRecord startRecord = new NodeRecord();
+            startRecord.Node = GetNearestVertex(startObject.transform.position);
+            startRecord.Connection = null;
+            startRecord.CostSoFar = 0;
+            startRecord.EstimatedTotalCost = h(startRecord.Node, goalNode);
+
+            PathFindingList open = new PathFindingList();
+            open.Add(startRecord);
+            PathFindingList closed = new PathFindingList();
+            NodeRecord current = new NodeRecord();
+
+            while (open.Length() > 0)
+            {
+                current = open.SmallestElement();
+
+                if (current.Node == goalNode) { break; }
+
+                List<Connection> connections = GetConnectionNeighbours(current.Node);
+
+                foreach (Connection connection in connections)
+                {
+                    Vertex endNode = connection.ToNode;
+                    float endNodeCost = current.CostSoFar + connection.Cost;
+                    NodeRecord endNodeRecord = new NodeRecord();
+                    float endNodeHeuristic;
+
+                    if (closed.Contains(endNode))
+                    {
+                        endNodeRecord = closed.Find(endNode);
+
+                        if (endNodeRecord.CostSoFar <= endNodeCost)
+                        {
+                            continue;
+                        }
+
+                        closed.Remove(endNodeRecord);
+
+                        endNodeHeuristic = endNodeRecord.EstimatedTotalCost - endNodeRecord.CostSoFar;
+                    }
+                    else if (open.Contains(endNode))
+                    {
+                        endNodeRecord = open.Find(endNode);
+
+                        if (endNodeRecord.CostSoFar <= endNodeCost) 
+                        {
+                            continue;
+                        }
+                        endNodeHeuristic = endNodeRecord.Cost - endNodeRecord.CostSoFar; // wtf
+                    }
+                    else
+                    {
+                        endNodeRecord = new NodeRecord();
+                        endNodeRecord.Node = endNode;
+                        endNodeHeuristic = h(endNode, goalNode);
+                    }
+
+                    endNodeRecord.Cost = endNodeCost; // wtf
+                    endNodeRecord.Connection = connection;
+                    endNodeRecord.EstimatedTotalCost = endNodeCost + endNodeHeuristic;
+
+                    if (!open.Contains(endNode))
+                    {
+                        open.Add(endNodeRecord);
+                    }                   
+                }
+                open.Remove(current);
+                closed.Add(current);
+            }
+            if (current.Node != goalNode)
+            {
+                return null;
+            }
+            else
+            {
+                List<Vertex> path = new List<Vertex>();
+                path.Add(current.Connection.FromNode);
+                while (current.Node != startRecord.Node)
+                {
+                    path.Add(current.Connection.ToNode);
+                    current.Node = current.Connection.FromNode;
+                }
+                
+                path.Reverse();
+                return path;
+            }           
         }
 
         public List<Vertex> Smooth(List<Vertex> inputPath)

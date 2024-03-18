@@ -912,6 +912,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 13400000, guid: 78e4049497c51314b8bbd0e860acad45,
         type: 2}
+    - target: {fileID: 5587432493576105252, guid: c391d0bafd410864ca5d0cc1bd083ed3,
+        type: 3}
+      propertyPath: objetivo
+      value: 
+      objectReference: {fileID: 1299422300}
     - target: {fileID: 5587432493576105253, guid: c391d0bafd410864ca5d0cc1bd083ed3,
         type: 3}
       propertyPath: m_Drag

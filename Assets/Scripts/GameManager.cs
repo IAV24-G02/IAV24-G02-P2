@@ -47,6 +47,8 @@ namespace UCM.IAV.Movimiento
 
         int numMinos = 1;
 
+        public bool isIA = false;
+
         private void Awake()
         {
             // Hacemos que el gestor del juego sea un Ejemplar Único
@@ -124,6 +126,10 @@ namespace UCM.IAV.Movimiento
                 ChangeFrameRate();
             if (Input.GetKeyDown(KeyCode.C))
                 heuristicText.text = theseusGraph.ChangeHeuristic();
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+                ToggleIAMovement();
+           
+
         }
 
         private void FindGO()
@@ -153,6 +159,11 @@ namespace UCM.IAV.Movimiento
         public void RestartScene()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        public void ToggleIAMovement()
+        {
+            isIA = !isIA;
         }
 
 

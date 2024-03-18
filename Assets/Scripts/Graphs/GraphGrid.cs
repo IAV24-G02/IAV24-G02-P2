@@ -92,6 +92,7 @@ namespace UCM.IAV.Navegacion
                     vertexObjs = new GameObject[numRows * numCols];
                     mapVertices = new bool[numRows, numCols];
                     costsVertices = new float[numRows, numCols];
+                    neighbourConnections = new List<Connection>();
 
                     // Leer mapa
                     for (i = 0; i < numRows; i++)
@@ -129,7 +130,8 @@ namespace UCM.IAV.Navegacion
                             v.id = id;
                             vertices.Add(v);
                             neighbourVertex.Add(new List<Vertex>());
-                            
+                            neighbourConnections.Add(new Connection());
+
                             vertexObjs[id].transform.localScale *= cellSize;
                         }
                     }
@@ -159,6 +161,7 @@ namespace UCM.IAV.Navegacion
             int i, j;
             int vertexId = GridToId(x, y);
             neighbourVertex[vertexId] = new List<Vertex>();
+            neighbourConnections[vertexId] = new Connection();
             Vector2[] pos = new Vector2[0];
             if (get8) {
                 pos = new Vector2[8];
@@ -190,6 +193,10 @@ namespace UCM.IAV.Navegacion
 
                 int id = GridToId(j, i);
                 neighbourVertex[vertexId].Add(vertices[id]);
+                Connection connection = new Connection();
+                connection.FromNode = vertices[vertexId];
+                connection.ToNode = vertices[id];
+                neighbourConnections.Add(connection);
                 costsVertices[i, j] = defaultCost;
             }
         }
