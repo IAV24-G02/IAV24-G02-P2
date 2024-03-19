@@ -212,10 +212,40 @@ namespace UCM.IAV.Navegacion
         public List<Vertex> Smooth(List<Vertex> inputPath)
         {
             // IMPLEMENTAR SUAVIZADO DE CAMINOS
+            inputPath.Reverse();
 
+            //Si el camino es solo de dos nodos de longitud, entonces no se puede suavizar
+            if (inputPath.Count <= 2) return inputPath;
+
+            //Compilar un camino de salida
             List<Vertex> outputPath = new List<Vertex>();
+            outputPath.Add(inputPath[0]);
 
+            //Se hace un seguimiento de la posición en la que se encuentra. Se empieza con dos, ya que se asume que dos nodos adyacentes pasarán el trazado del rayo
+            int inputIndex = 2;
+
+            //Bucle hasta que encontramos el último item del input.
+            while (inputIndex < inputPath.Count - 1)
+            {
+                Vector3 fromPt = outputPath[outputPath.Count - 1].transform.position;
+                Vector3 toPt = inputPath[inputIndex].transform.position;
+
+                RaycastHit hitInfo = new RaycastHit();
+                //Si el trazado de rayo ha fallado, se añade el último nodo al final de la lista de salida.
+                if (Physics.SphereCast(fromPt, 2f, toPt - fromPt, out hitInfo, (toPt - fromPt).magnitude))
+                {
+                    outputPath.Add(inputPath[inputIndex - 1]);
+                }
+                
+                //Se considera el siguiente nodo.
+                inputIndex++;
+            }
+
+            //Se ha llegado al final del camino de entrada, por lo que se añade el último nodo al de salida y se devuelve
+            outputPath.Add(inputPath[inputPath.Count - 1]);
+            outputPath.Reverse();
             return outputPath;
+
         }
 
         // Reconstruir el camino, dando la vuelta a la lista de nodos 'padres' /previos que hemos ido anotando
