@@ -23,9 +23,9 @@ public class PathFindingList
 
         foreach (NodeRecord record in records)
         {
-            if (record != null && record.Connection != null && record.Connection.ToNode != null)
+            if (record != null && record.PreviousNode != null && record.PreviousNode.Node != null)
             {
-                if (record.Connection.ToNode == node)
+                if (record.PreviousNode.Node == node)
                     return record;
             }
         }
@@ -40,4 +40,6 @@ public class PathFindingList
     }
 
     public int Length() { return records.Count; }
+
+    public void Clear() { records.Clear(); }
 }

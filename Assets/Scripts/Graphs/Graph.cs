@@ -15,6 +15,7 @@ namespace UCM.IAV.Navegacion
     using Unity.PlasticSCM.Editor.WebApi;
     using System.Runtime.InteropServices;
     using UnityEditor.Experimental.GraphView;
+    using System.Linq;
 
     /// <summary>
     /// Abstract class for graphs
@@ -72,15 +73,19 @@ namespace UCM.IAV.Navegacion
         }
         public virtual List<Connection> GetConnectionNeighbours(Vertex v)
         {
-            List<Connection> connections = new List<Connection>();
+            // Usar un set para evitar la duplicación de conexiones
+            HashSet<Connection> uniqueConnections = new HashSet<Connection>();
+
             foreach (Connection connection in neighbourConnections)
             {
                 if (connection != null && connection.FromNode == v)
                 {
-                    connections.Add(connection);
+                    uniqueConnections.Add(connection);
                 }
             }
-            return connections;
+
+            // Devolverlo como una lista
+            return uniqueConnections.ToList();
         }
 
         public virtual Vertex[] GetNeighbours(Vertex v)
@@ -141,14 +146,13 @@ namespace UCM.IAV.Navegacion
             while (open.Length() > 0)
             {
                 current = open.SmallestElement();
-                if (current.Node == goalNode) 
+                if (current.Node == goalNode)
                     break;
 
                 List<Connection> connections = GetConnectionNeighbours(current.Node);
 
                 foreach (Connection connection in connections)
                 {
-                    Debug.Log("Connection: " + connection.FromNode + " -> " + connection.ToNode + " Cost: " + connection.Cost);
                     Vertex endNode = connection.ToNode;
                     float endNodeCost = current.CostSoFar + connection.Cost;
                     NodeRecord endNodeRecord;
@@ -172,16 +176,14 @@ namespace UCM.IAV.Navegacion
                         if (endNodeRecord.CostSoFar <= endNodeCost)
                             continue;
 
-                        endNodeHeuristic = endNodeRecord.Connection.Cost - endNodeRecord.CostSoFar;
+                        endNodeHeuristic = endNodeRecord.Cost - endNodeRecord.CostSoFar;
                     }
                     else
                     {
-                        Connection newConnection = new Connection(current.Node, endNode, defaultCost);
-                        endNodeRecord = new NodeRecord(endNode, newConnection);
+                        endNodeRecord = new NodeRecord(endNode, current, defaultCost);
                         endNodeHeuristic = h(endNode, goalNode);
                     }
 
-                    endNodeRecord.Connection = connection;
                     endNodeRecord.CostSoFar = endNodeCost;
                     endNodeRecord.EstimatedTotalCost = endNodeCost + endNodeHeuristic;
 
@@ -197,13 +199,13 @@ namespace UCM.IAV.Navegacion
                 return null;
             else
             {
-                path.Add(current.Connection.FromNode);
-                while (current.Node != startRecord.Node)
+                path = new List<Vertex>() { current.Node }; // path.Add(current.Node);
+                while (current.PreviousNode != null)
                 {
-                    path.Add(current.Connection.ToNode);
-                    current.Node = current.Connection.FromNode;
+                    path.Add(current.PreviousNode.Node);
+                    current = current.PreviousNode;
                 }
-
+                
                 path.Reverse();
                 return path;
             }

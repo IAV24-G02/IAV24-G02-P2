@@ -64,7 +64,7 @@ namespace UCM.IAV.Navegacion
             mainCamera = Camera.main;
             srcObj = GameManager.instance.GetPlayer();
             dstObj = null;
-            path = new List<Vertex>();
+            path = null;
             hilo = GetComponent<LineRenderer>();
             ariadna = false;
 
@@ -103,7 +103,7 @@ namespace UCM.IAV.Navegacion
                 {
                     case TesterGraphAlgorithm.ASTAR:
                         if (firstHeuristic) path = graph.GetPathAstar(srcObj, dstObj, Euclidean); // COMO SEGUNDO ARGUMENTO SE DEBERÍA PASAR LA HEURÍSTICA
-                        else path = graph.GetPathAstar(srcObj, dstObj, null); // COMO SEGUNDO ARGUMENTO SE DEBERÍA PASAR LA HEURÍSTICA
+                        else path = graph.GetPathAstar(srcObj, dstObj, Manhattan); // COMO SEGUNDO ARGUMENTO SE DEBERÍA PASAR LA HEURÍSTICA
                         break;
                     default:
                     case TesterGraphAlgorithm.BFS:
@@ -223,7 +223,7 @@ namespace UCM.IAV.Navegacion
         {
             // Está preparado para tener 2 heurísticas diferentes
             firstHeuristic = !firstHeuristic;
-            return firstHeuristic ? "Euclidea" : "Segunda";
+            return firstHeuristic ? "Euclidea" : "Manhattan";
         }
 
         public virtual void ResetPath()
@@ -235,6 +235,11 @@ namespace UCM.IAV.Navegacion
         {
             return Vector3.Distance(a.transform.position, b.transform.position);
         }
-
+        public float Manhattan(Vertex a, Vertex b)
+        {
+            Vector2 posA = a.transform.position;
+            Vector2 posB = b.transform.position;
+            return Mathf.Abs(posA.x - posB.x) + Mathf.Abs(posA.y - posB.y);
+        }
     }
 }

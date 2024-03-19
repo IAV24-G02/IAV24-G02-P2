@@ -47,10 +47,6 @@ namespace UCM.IAV.Movimiento
 
         int numMinos = 1;
 
-        public bool isIA = false;
-
-        ControlJugador myControlJugador;
-
         private void Awake()
         {
             // Hacemos que el gestor del juego sea un Ejemplar Único
@@ -70,11 +66,6 @@ namespace UCM.IAV.Movimiento
             Application.targetFrameRate = frameRate;
 
             FindGO();
-
-            if (player != null)
-            {
-                myControlJugador = player.GetComponent<ControlJugador>();
-            }
         }
 
         // Lo primero que se llama al activarse (tras el Awake)
@@ -92,11 +83,6 @@ namespace UCM.IAV.Movimiento
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             FindGO();
-            if (player != null)
-            {
-                myControlJugador = player.GetComponent<ControlJugador>();
-            }
-
         }
 
 
@@ -137,8 +123,6 @@ namespace UCM.IAV.Movimiento
                 ChangeFrameRate();
             if (Input.GetKeyDown(KeyCode.C))
                 heuristicText.text = theseusGraph.ChangeHeuristic();
-            //if (Input.GetKeyDown(KeyCode.Mouse1))
-            //    ToggleIAMovement();
         }
 
         private void FindGO()
@@ -169,20 +153,6 @@ namespace UCM.IAV.Movimiento
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-
-        public void ToggleIAMovement()
-        {
-            isIA = !isIA;
-            if (myControlJugador != null)
-            {
-                myControlJugador.enabled = !isIA;
-            }
-            else
-            {
-                Debug.LogError("No se ha cogido referencia al componente ControlJugador");
-            }
-        }
-
 
         public void setNumMinos()
         {
