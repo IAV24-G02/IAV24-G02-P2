@@ -14,6 +14,7 @@ namespace UCM.IAV.Navegacion
     using System.Collections.Generic;
     using Unity.PlasticSCM.Editor.WebApi;
     using System.Runtime.InteropServices;
+    using UnityEditor.Experimental.GraphView;
 
     /// <summary>
     /// Abstract class for graphs
@@ -39,6 +40,70 @@ namespace UCM.IAV.Navegacion
         // Used for getting path in frames
         public List<Vertex> path;
 
+        //public struct NodeRecord
+        //{
+        //    private Vertex node; // Nodo seleccionado
+        //    private Connection connection; // Conexión seleccionada a partir del nodo seleccionado
+        //    private float costSoFar; // Coste acumulado hasta el nodo seleccionado
+        //    private float estimatedTotalCost; // Coste total estimado hasta el nodo seleccionado
+        //    private float cost;
+
+        //    public NodeRecord(Vertex Node, Connection Connection = null, float CostSoFar = 0, float EstimatedTotalCost = 0, float Cost = 0)
+        //    {
+        //        node = Node;
+        //        connection = Connection;
+        //        costSoFar = CostSoFar;
+        //        estimatedTotalCost = EstimatedTotalCost;
+        //        cost = Cost;
+        //    }
+
+        //    public Vertex Node { get { return node; } set { node = value; } }
+        //    public Connection Connection { get { return connection; } set { connection = value; } }
+        //    public float CostSoFar { get { return costSoFar; } set { costSoFar = value; } }
+        //    public float EstimatedTotalCost { get { return estimatedTotalCost; } set { estimatedTotalCost = value; } }
+        //    public float Cost { get { return cost; } set { cost = value; } }
+        //}
+
+        //public struct PathFindingList
+        //{
+        //    private List<NodeRecord> records; // Lista de nodos
+
+        //    public PathFindingList(List<NodeRecord> Records)
+        //    {
+        //        records = Records;
+        //    }
+
+        //    public void Add(NodeRecord record) { records.Add(record); }
+        //    public void Remove(NodeRecord record) { records.Remove(record); }
+        //    public bool Contains(Vertex node)
+        //    {
+        //        return Find(node) != null;
+        //    }
+        //    public NodeRecord? Find(Vertex node)
+        //    {
+        //        foreach (NodeRecord record in records)
+        //        {
+        //            if (record.Node == node) return record;
+        //        }
+        //        return null;
+        //    }
+        //    public NodeRecord? SmallestElement()
+        //    {
+        //        if (records == null || records.Count == 0) return null;
+
+        //        NodeRecord smallest = records[0];
+        //        foreach (NodeRecord record in records)
+        //        {
+        //            if (record.EstimatedTotalCost < smallest.EstimatedTotalCost)
+        //            {
+        //                smallest = record;
+        //            }
+        //        }
+        //        return smallest;
+        //    }
+
+        //    public int Length() { return records.Count; }
+        //}
 
         public virtual void Start()
         {
@@ -57,7 +122,7 @@ namespace UCM.IAV.Navegacion
         public virtual void UpdateVertexCost(Vector3 position, float costMultipliyer) { }
 
         public virtual Vertex GetNearestVertex(Vector3 position)
-        {         
+        {
             return null;
         }
 
@@ -94,7 +159,8 @@ namespace UCM.IAV.Navegacion
 
             Vertex[] neighs = neighbourVertex[v.id].ToArray();
             float[] costsV = new float[neighs.Length];
-            for (int neighbour = 0; neighbour < neighs.Length; neighbour++) {
+            for (int neighbour = 0; neighbour < neighs.Length; neighbour++)
+            {
                 int j = (int)Mathf.Floor(neighs[neighbour].id / numCols);
                 int i = (int)Mathf.Floor(neighs[neighbour].id % numCols);
                 costsV[neighbour] = costsVertices[j, i];
@@ -119,93 +185,90 @@ namespace UCM.IAV.Navegacion
 
         public List<Vertex> GetPathAstar(GameObject startObject, GameObject endObject, Heuristic h = null)
         {
-            // IMPLEMENTAR ALGORITMO A*
-            Vertex goalNode = GetNearestVertex(endObject.transform.position);
-            NodeRecord startRecord = new NodeRecord();
-            startRecord.Node = GetNearestVertex(startObject.transform.position);
-            startRecord.Connection = null;
-            startRecord.CostSoFar = 0;
-            startRecord.EstimatedTotalCost = h(startRecord.Node, goalNode);
+            //Vertex startNode = GetNearestVertex(startObject.transform.position);
+            //Vertex goalNode = GetNearestVertex(endObject.transform.position);
+            //NodeRecord startRecord = new NodeRecord(startNode, null, 0, h(startNode, goalNode));
+            //Debug.Log(startRecord);
+            //PathFindingList open = new PathFindingList();
+            //open.Add(startRecord);
+            //Debug.Log(startRecord);
+            //Debug.Log(open.SmallestElement());
+            //PathFindingList closed = new PathFindingList();
+            //NodeRecord current = new NodeRecord();
 
-            PathFindingList open = new PathFindingList();
-            open.Add(startRecord);
-            PathFindingList closed = new PathFindingList();
-            NodeRecord current = new NodeRecord();
+            //while (open.Length() > 0)
+            //{
+            //    current = open.SmallestElement();
+            //    if (current.Node == goalNode) { break; }
 
-            while (open.Length() > 0)
-            {
-                current = open.SmallestElement();
+            //    List<Connection> connections = GetConnectionNeighbours(current.Node);
 
-                if (current.Node == goalNode) { break; }
+            //    foreach (Connection connection in connections)
+            //    {
+            //        Vertex endNode = connection.ToNode;
+            //        float endNodeCost = current.CostSoFar + connection.Cost;
+            //        NodeRecord endNodeRecord = new NodeRecord();
+            //        float endNodeHeuristic;
 
-                List<Connection> connections = GetConnectionNeighbours(current.Node);
+            //        if (closed.Contains(endNode))
+            //        {
+            //            endNodeRecord = closed.Find(endNode);
 
-                foreach (Connection connection in connections)
-                {
-                    Vertex endNode = connection.ToNode;
-                    float endNodeCost = current.CostSoFar + connection.Cost;
-                    NodeRecord endNodeRecord = new NodeRecord();
-                    float endNodeHeuristic;
+            //            if (endNodeRecord.CostSoFar <= endNodeCost)
+            //            {
+            //                continue;
+            //            }
 
-                    if (closed.Contains(endNode))
-                    {
-                        endNodeRecord = closed.Find(endNode);
+            //            closed.Remove(endNodeRecord);
 
-                        if (endNodeRecord.CostSoFar <= endNodeCost)
-                        {
-                            continue;
-                        }
+            //            endNodeHeuristic = endNodeRecord.EstimatedTotalCost - endNodeRecord.CostSoFar;
+            //        }
+            //        else if (open.Contains(endNode))
+            //        {
+            //            endNodeRecord = open.Find(endNode);
 
-                        closed.Remove(endNodeRecord);
+            //            if (endNodeRecord.CostSoFar <= endNodeCost)
+            //            {
+            //                continue;
+            //            }
+            //            endNodeHeuristic = endNodeRecord.Cost - endNodeRecord.CostSoFar; // wtf
+            //        }
+            //        else
+            //        {
+            //            endNodeRecord = new NodeRecord();
+            //            endNodeRecord.Node = endNode;
+            //            endNodeHeuristic = h(endNode, goalNode);
+            //        }
 
-                        endNodeHeuristic = endNodeRecord.EstimatedTotalCost - endNodeRecord.CostSoFar;
-                    }
-                    else if (open.Contains(endNode))
-                    {
-                        endNodeRecord = open.Find(endNode);
+            //        endNodeRecord.Cost = endNodeCost; // wtf
+            //        endNodeRecord.Connection = connection;
+            //        endNodeRecord.EstimatedTotalCost = endNodeCost + endNodeHeuristic;
 
-                        if (endNodeRecord.CostSoFar <= endNodeCost) 
-                        {
-                            continue;
-                        }
-                        endNodeHeuristic = endNodeRecord.Cost - endNodeRecord.CostSoFar; // wtf
-                    }
-                    else
-                    {
-                        endNodeRecord = new NodeRecord();
-                        endNodeRecord.Node = endNode;
-                        endNodeHeuristic = h(endNode, goalNode);
-                    }
+            //        if (!open.Contains(endNode))
+            //        {
+            //            open.Add(endNodeRecord);
+            //        }
+            //    }
+            //    open.Remove(current);
+            //    closed.Add(current);
+            //}
+            //if (current.Node != goalNode)
+            //{
+            //    return null;
+            //}
+            //else
+            //{
+            //    path.Add(current.Connection.FromNode);
+            //    while (current.Node != startRecord.Node)
+            //    {
+            //        path.Add(current.Connection.ToNode);
+            //        current.Node = current.Connection.FromNode;
+            //    }
 
-                    endNodeRecord.Cost = endNodeCost; // wtf
-                    endNodeRecord.Connection = connection;
-                    endNodeRecord.EstimatedTotalCost = endNodeCost + endNodeHeuristic;
-
-                    if (!open.Contains(endNode))
-                    {
-                        open.Add(endNodeRecord);
-                    }                   
-                }
-                open.Remove(current);
-                closed.Add(current);
-            }
-            if (current.Node != goalNode)
-            {
-                return null;
-            }
-            else
-            {
-                List<Vertex> path = new List<Vertex>();
-                path.Add(current.Connection.FromNode);
-                while (current.Node != startRecord.Node)
-                {
-                    path.Add(current.Connection.ToNode);
-                    current.Node = current.Connection.FromNode;
-                }
-                
-                path.Reverse();
-                return path;
-            }           
+            //    path.Reverse();
+            //    return path;
+            //}
+            return path;
         }
 
         public List<Vertex> Smooth(List<Vertex> inputPath)
@@ -214,7 +277,7 @@ namespace UCM.IAV.Navegacion
 
             List<Vertex> outputPath = new List<Vertex>();
 
-            return outputPath; 
+            return outputPath;
         }
 
         // Reconstruir el camino, dando la vuelta a la lista de nodos 'padres' /previos que hemos ido anotando
@@ -222,7 +285,7 @@ namespace UCM.IAV.Navegacion
         {
             List<Vertex> path = new List<Vertex>();
 
-            if (dstId < 0 || dstId >= vertices.Count) 
+            if (dstId < 0 || dstId >= vertices.Count)
                 return path;
 
             int prev = dstId;
