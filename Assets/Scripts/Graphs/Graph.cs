@@ -40,70 +40,10 @@ namespace UCM.IAV.Navegacion
         // Used for getting path in frames
         public List<Vertex> path;
 
-        //public struct NodeRecord
-        //{
-        //    private Vertex node; // Nodo seleccionado
-        //    private Connection connection; // Conexión seleccionada a partir del nodo seleccionado
-        //    private float costSoFar; // Coste acumulado hasta el nodo seleccionado
-        //    private float estimatedTotalCost; // Coste total estimado hasta el nodo seleccionado
-        //    private float cost;
-
-        //    public NodeRecord(Vertex Node, Connection Connection = null, float CostSoFar = 0, float EstimatedTotalCost = 0, float Cost = 0)
-        //    {
-        //        node = Node;
-        //        connection = Connection;
-        //        costSoFar = CostSoFar;
-        //        estimatedTotalCost = EstimatedTotalCost;
-        //        cost = Cost;
-        //    }
-
-        //    public Vertex Node { get { return node; } set { node = value; } }
-        //    public Connection Connection { get { return connection; } set { connection = value; } }
-        //    public float CostSoFar { get { return costSoFar; } set { costSoFar = value; } }
-        //    public float EstimatedTotalCost { get { return estimatedTotalCost; } set { estimatedTotalCost = value; } }
-        //    public float Cost { get { return cost; } set { cost = value; } }
-        //}
-
-        //public struct PathFindingList
-        //{
-        //    private List<NodeRecord> records; // Lista de nodos
-
-        //    public PathFindingList(List<NodeRecord> Records)
-        //    {
-        //        records = Records;
-        //    }
-
-        //    public void Add(NodeRecord record) { records.Add(record); }
-        //    public void Remove(NodeRecord record) { records.Remove(record); }
-        //    public bool Contains(Vertex node)
-        //    {
-        //        return Find(node) != null;
-        //    }
-        //    public NodeRecord? Find(Vertex node)
-        //    {
-        //        foreach (NodeRecord record in records)
-        //        {
-        //            if (record.Node == node) return record;
-        //        }
-        //        return null;
-        //    }
-        //    public NodeRecord? SmallestElement()
-        //    {
-        //        if (records == null || records.Count == 0) return null;
-
-        //        NodeRecord smallest = records[0];
-        //        foreach (NodeRecord record in records)
-        //        {
-        //            if (record.EstimatedTotalCost < smallest.EstimatedTotalCost)
-        //            {
-        //                smallest = record;
-        //            }
-        //        }
-        //        return smallest;
-        //    }
-
-        //    public int Length() { return records.Count; }
-        //}
+        [Range(0, Mathf.Infinity)]
+        public float defaultCost = 1f;
+        [Range(0, Mathf.Infinity)]
+        public float maximumCost = Mathf.Infinity;
 
         public virtual void Start()
         {
@@ -135,7 +75,7 @@ namespace UCM.IAV.Navegacion
             List<Connection> connections = new List<Connection>();
             foreach (Connection connection in neighbourConnections)
             {
-                if (connection.FromNode == v)
+                if (connection != null && connection.FromNode == v)
                 {
                     connections.Add(connection);
                 }
@@ -187,22 +127,28 @@ namespace UCM.IAV.Navegacion
         {
             Vertex startNode = GetNearestVertex(startObject.transform.position);
             Vertex goalNode = GetNearestVertex(endObject.transform.position);
+            if (startNode == null || goalNode == null)
+                return null;
+
             NodeRecord startRecord = new NodeRecord(startNode, null, 0, h(startNode, goalNode));
-            
+
             PathFindingList open = new PathFindingList();
             open.Add(startRecord);
             PathFindingList closed = new PathFindingList();
-            NodeRecord current = startRecord;
+
+            NodeRecord current = new NodeRecord();
 
             while (open.Length() > 0)
             {
                 current = open.SmallestElement();
-                if (current.Node == goalNode) { break; }
+                if (current.Node == goalNode) 
+                    break;
 
                 List<Connection> connections = GetConnectionNeighbours(current.Node);
 
                 foreach (Connection connection in connections)
                 {
+                    Debug.Log("Connection: " + connection.FromNode + " -> " + connection.ToNode + " Cost: " + connection.Cost);
                     Vertex endNode = connection.ToNode;
                     float endNodeCost = current.CostSoFar + connection.Cost;
                     NodeRecord endNodeRecord;
@@ -213,9 +159,7 @@ namespace UCM.IAV.Navegacion
                         endNodeRecord = closed.Find(endNode);
 
                         if (endNodeRecord.CostSoFar <= endNodeCost)
-                        {
                             continue;
-                        }
 
                         closed.Remove(endNodeRecord);
 
@@ -226,35 +170,31 @@ namespace UCM.IAV.Navegacion
                         endNodeRecord = open.Find(endNode);
 
                         if (endNodeRecord.CostSoFar <= endNodeCost)
-                        {
                             continue;
-                        }
+
                         endNodeHeuristic = endNodeRecord.Connection.Cost - endNodeRecord.CostSoFar;
                     }
                     else
                     {
-                        endNodeRecord = new NodeRecord();
-                        endNodeRecord.Node = endNode;
+                        Connection newConnection = new Connection(current.Node, endNode, defaultCost);
+                        endNodeRecord = new NodeRecord(endNode, newConnection);
                         endNodeHeuristic = h(endNode, goalNode);
-                        // ...
                     }
 
-                    //endNodeRecord.Connection = connection;
+                    endNodeRecord.Connection = connection;
                     endNodeRecord.CostSoFar = endNodeCost;
                     endNodeRecord.EstimatedTotalCost = endNodeCost + endNodeHeuristic;
 
                     if (!open.Contains(endNode))
-                    {
                         open.Add(endNodeRecord);
-                    }
                 }
+
                 open.Remove(current);
                 closed.Add(current);
             }
+
             if (current.Node != goalNode)
-            {
                 return null;
-            }
             else
             {
                 path.Add(current.Connection.FromNode);
@@ -294,6 +234,5 @@ namespace UCM.IAV.Navegacion
             } while (prev != srcId);
             return path;
         }
-
     }
 }

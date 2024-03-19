@@ -137,10 +137,8 @@ namespace UCM.IAV.Movimiento
                 ChangeFrameRate();
             if (Input.GetKeyDown(KeyCode.C))
                 heuristicText.text = theseusGraph.ChangeHeuristic();
-            if (Input.GetKeyDown(KeyCode.Mouse1))
-                ToggleIAMovement();
-           
-
+            //if (Input.GetKeyDown(KeyCode.Mouse1))
+            //    ToggleIAMovement();
         }
 
         private void FindGO()

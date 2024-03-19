@@ -76,7 +76,7 @@ namespace UCM.IAV.Navegacion
         // Update is called once per frame
         public virtual void Update()
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Mouse1))
             {
                 if (!ariadna)
                     updateAriadna(true);
@@ -116,7 +116,7 @@ namespace UCM.IAV.Navegacion
                 if (smoothPath)
                     path = graph.Smooth(path); // Suavizar el camino, una vez calculado
 
-                if (path.Count > 0)
+                if (path != null && path.Count > 0)
                 {
                     //GameManager.instance.SetPlayerNode(path[path.Count - 1].transform);
 
@@ -127,7 +127,7 @@ namespace UCM.IAV.Navegacion
 
         public virtual Transform GetNextNode()
         {
-            if (path.Count > 0)
+            if (path != null && path.Count > 0)
                 return path[path.Count - 1].transform;
 
             return null;

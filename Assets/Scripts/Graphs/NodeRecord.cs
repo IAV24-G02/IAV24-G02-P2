@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UCM.IAV.Navegacion;
-using UnityEngine;
 
-public class NodeRecord
+public class NodeRecord : IComparable<NodeRecord>
 {
-    private Vertex node; // Nodo seleccionado
-    private Connection connection; // Conexión seleccionada a partir del nodo seleccionado
-    private float costSoFar; // Coste acumulado hasta el nodo seleccionado
-    private float estimatedTotalCost; // Coste total estimado hasta el nodo seleccionado
+    public Vertex Node { get; set; }                // Nodo seleccionado
+    public Connection Connection { get; set; }      // Conexión seleccionada a partir del nodo seleccionado
+    public float CostSoFar { get; set; }            // Coste acumulado hasta el nodo seleccionado
+    public float EstimatedTotalCost { get; set; }   // Coste total estimado hasta el nodo seleccionado
 
     public NodeRecord(Vertex node = null, Connection connection = null, float costSoFar = 0, float estimatedTotalCost = 0)
     {
@@ -18,8 +16,10 @@ public class NodeRecord
         EstimatedTotalCost = estimatedTotalCost;
     }
 
-    public Vertex Node { get { return node; } set { node = value; } }
-    public Connection Connection { get { return connection; } set { connection = value; } }
-    public float CostSoFar { get { return costSoFar; } set { costSoFar = value; } }
-    public float EstimatedTotalCost { get { return estimatedTotalCost; } set { estimatedTotalCost = value; } }
+    public int CompareTo(NodeRecord other)
+    {
+        if (other == null) 
+            return 1;
+        return EstimatedTotalCost.CompareTo(other.EstimatedTotalCost);
+    }
 }
