@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Connection : MonoBehaviour
 {
-
     private Vertex fromNode; // Nodo origen
     private Vertex toNode; // Nodo destino
     private float cost; // Coste de la conexión

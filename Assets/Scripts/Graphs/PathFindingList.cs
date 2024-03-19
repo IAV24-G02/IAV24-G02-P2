@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Profiling;
 using UnityEngine;
 using UCM.IAV.Navegacion;
+using System.Linq;
 
 public class PathFindingList
 {
@@ -20,7 +21,8 @@ public class PathFindingList
     public bool Contains(Vertex node) { 
         return Find(node) != null;
     }
-    public NodeRecord Find(Vertex node) { 
+    public NodeRecord Find(Vertex node) {
+
         foreach (NodeRecord record in records)
         {
             if (record.Node == node) return record;
@@ -29,17 +31,8 @@ public class PathFindingList
     }
     public NodeRecord SmallestElement()
     {
-        Debug.Log(records);
         if (records == null || records.Count == 0) return null;
-        NodeRecord smallest = records[0];
-        foreach (NodeRecord record in records)
-        {
-            if (record.EstimatedTotalCost < smallest.EstimatedTotalCost)
-            {
-                smallest = record;
-            }
-        }
-        return smallest;
+        return records.Min();
     }
 
     public int Length() { return records.Count; }

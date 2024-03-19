@@ -30,7 +30,7 @@ namespace UCM.IAV.Movimiento
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Mouse1))
             {
                 if(!ariadna)
                 updateAriadna(true);
