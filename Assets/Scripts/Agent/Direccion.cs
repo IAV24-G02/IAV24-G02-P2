@@ -6,14 +6,10 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
+using UnityEngine;
+
 namespace UCM.IAV.Movimiento
 {
-
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-
     /// <summary>
     /// Clase auxiliar para representar la dirección (instrucciones) con la que corregir el movimiento dinámicamente, mediante aceleraciones.
     /// </summary>

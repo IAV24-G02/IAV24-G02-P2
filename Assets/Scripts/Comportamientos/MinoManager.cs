@@ -6,25 +6,25 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
-using System.Collections;
 using System.Collections.Generic;
 using UCM.IAV.Movimiento;
 using UnityEngine;
 
 namespace UCM.IAV.Navegacion
 {
-
     public class MinoManager : MonoBehaviour
     {
-        public GameObject minotaur;
+        [SerializeField]
+        private GameObject minotaurPrefab;  // Prefab del minotauro
 
-        private Graph graph;
+        private Graph graph;                // Grafo de la escena
+        private int numMinos = 1;           // Número de minotauros
+        private List<GameObject> minos;     // Lista de minotauros
 
-        public int numMinos = 1;
-
-        private void Start()
+        void Start()
         {
             numMinos = GameManager.instance.getNumMinos();
+            minos = new List<GameObject>();
             StartUp();
         }
 
@@ -36,12 +36,12 @@ namespace UCM.IAV.Navegacion
                 graph = graphGO.GetComponent<GraphGrid>();
 
             for (int i = 0; i < numMinos; i++)
-                GenerateMino();
+                minos.Add(GenerateMino());
         }
 
-        void GenerateMino()
+        private GameObject GenerateMino()
         {
-            GameObject minoGO = Instantiate(minotaur, graph.GetRandomPos().transform.position + new Vector3(0, 0.3f, 0), Quaternion.identity);
+            return Instantiate(minotaurPrefab, graph.GetRandomPos().transform.position + new Vector3(0, 0.3f, 0), Quaternion.identity);
         }
     }
 }

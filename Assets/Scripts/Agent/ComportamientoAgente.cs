@@ -6,9 +6,10 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
+using UnityEngine;
+
 namespace UCM.IAV.Movimiento
 {
-    using UnityEngine;
 
     /// <summary>
     /// Clase abstracta que funciona como plantilla para todos los comportamientos de agente

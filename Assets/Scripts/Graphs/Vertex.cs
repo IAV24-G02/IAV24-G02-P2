@@ -6,12 +6,11 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
+using UnityEngine;
+using System;
+
 namespace UCM.IAV.Navegacion
 {
-    using UnityEngine;
-    using System;
-    using UCM.IAV.Movimiento;
-
     [System.Serializable]
     public class Vertex : MonoBehaviour, IComparable<Vertex>
     {

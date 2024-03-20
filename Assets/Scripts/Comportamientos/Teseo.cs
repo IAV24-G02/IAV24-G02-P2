@@ -6,22 +6,22 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace UCM.IAV.Movimiento
 {
+    /// <summary>
+    /// Clase para controlar el comportamiento del teseo
+    /// </summary>
     public class Teseo : MonoBehaviour
     {
-
-        bool ariadna = false;
-
-        SeguirCamino segCam;
-        ControlJugador contJug;
+        private bool ariadna;           // Variable para controlar si hay que seguir el camino o no
+        private SeguirCamino segCam;    // Componente de SeguirCamino
+        private ControlJugador contJug; // Componente de ControlJugador
 
         void Start()
         {
+            ariadna = false;
             segCam = GetComponent<SeguirCamino>();
             contJug = GetComponent<ControlJugador>();
         }
@@ -34,6 +34,7 @@ namespace UCM.IAV.Movimiento
             }
         }
 
+        // Actualiza el comportamiento del teseo
         public void updateAriadna(bool ar)
         {
             ariadna = ar;

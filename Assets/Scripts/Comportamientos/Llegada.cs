@@ -8,31 +8,31 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
+using UnityEngine;
+
 namespace UCM.IAV.Movimiento
 {
-    using UnityEngine;
-
     /// <summary>
     /// Clase para modelar el comportamiento de SEGUIR a otro agente
     /// </summary>
     public class Llegada : ComportamientoAgente
     {
         [SerializeField]
-        private float targetRadius; // El radio para llegar al objetivo
+        private float targetRadius;         // El radio para llegar al objetivo
 
         [SerializeField]
-        private float slowingRadius; // El radio en el que se empieza a ralentizarse
+        private float slowingRadius;        // El radio en el que se empieza a ralentizarse
 
         [SerializeField]
-        private float slowingForce; // La fuerza de ralentizado
+        private float slowingForce;         // La fuerza de ralentizado
 
         [SerializeField]
-        private float avoidQuantity = 5; // Cantidad de evasión
+        private float avoidQuantity = 5;    // Cantidad de evasión
 
         [SerializeField]
-        private int raycastDistance = 7;   // Distancia de raycast
+        private int raycastDistance = 7;    // Distancia de raycast
 
-        private float timeToTarget = 0.1f; // El tiempo en el que conseguir la aceleracion objetivo
+        private float timeToTarget = 0.1f;  // El tiempo en el que conseguir la aceleracion objetivo
 
         public override Direccion GetDireccion()
         {

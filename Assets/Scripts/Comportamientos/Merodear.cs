@@ -1,12 +1,5 @@
-/*    
-   Copyright (C) 2020-2023 Federico Peinado
-   http://www.federicopeinado.com
-   Este fichero forma parte del material de la asignatura Inteligencia Artificial para Videojuegos.
-   Esta asignatura se imparte en la Facultad de Informática de la Universidad Complutense de Madrid (España).
-   Autor: Federico Peinado 
-   Contacto: email@federicopeinado.com
-*/
 using UnityEngine;
+using UCM.IAV.Navegacion;
 
 namespace UCM.IAV.Movimiento
 {
@@ -16,49 +9,91 @@ namespace UCM.IAV.Movimiento
     public class Merodear : ComportamientoAgente
     {
         [SerializeField]
-        float maxTime = 2.0f;
+        public float offset = 0.2f;         // Distancia para considerar que ha llegado a la posición objetivo
 
         [SerializeField]
-        float minTime = 1.0f;
+        private float waitingTime = 0.2f;   // Tiempo de espera
 
-        float t = 3.0f;
-        float actualT = 2.0f;
+        private Graph graph;                // Grafo de la escena
+        private Vertex lastVertex;          // Último vértice visitado
+        private Vertex actualVertex;        // Vértice actual
+        private Vector3 nextPosition;       // Posición objetivo
+        private bool isWaiting;             // Indica si el agente parado o no
+        private float counterTime;          // Contador de tiempo
 
-        Direccion lastDir = new Direccion();
-
-        public override Direccion GetDireccion(){
-            if (t >= actualT)
-            {
-                Direccion direccion = new Direccion();
-
-                Vector2 dir = Random.insideUnitCircle.normalized;
-
-                direccion.lineal = new Vector3(dir.x, 0, dir.y);
-                direccion.lineal.Normalize();
-                direccion.lineal *= agente.aceleracionMax;
-
-                lastDir = direccion;
-
-                actualT = Random.Range(minTime, maxTime);
-
-                t = 0.0f;
-            }
-            else{
-                t += Time.deltaTime;
-            }
-
-            return lastDir;
+        private void Start()
+        {
+            graph = GameManager.instance.GetGraph();
+            lastVertex = new Vertex();
+            actualVertex = graph.GetNearestVertex(transform.position);
+            nextPosition = GetPositionWithoutHeight();
+            isWaiting = false;
+            counterTime = 0.0f;
         }
 
-        private void OnCollisionEnter(Collision collision)
+        public override Direccion GetDireccion()
         {
-            if(collision.gameObject.layer != 7)
+            Direccion direccion = new Direccion();
+
+            // No se mueve por estar esperando
+            if (isWaiting)
             {
-                t = 0;
-                lastDir.lineal = transform.position - collision.transform.position;
-                lastDir.lineal.Normalize();
-                lastDir.lineal *= agente.aceleracionMax;
+                counterTime += Time.deltaTime;
+                if (counterTime > waitingTime)
+                {
+                    isWaiting = false;
+                    counterTime = 0;
+                }
             }
+            else
+            {
+                Vector3 newPos = GetPositionWithoutHeight();
+
+                if ((nextPosition - newPos).magnitude <= offset)
+                {
+                    Vertex[] neighbours = graph.GetNeighbours(graph.GetNearestVertex(transform.position));
+
+                    // Si el agente está en un callejón sin salida
+                    if (neighbours.Length == 1)
+                    {
+                        lastVertex = actualVertex;
+                        actualVertex = neighbours[0];
+                    }
+                    // Si no, se evita el vértice anterior
+                    else
+                    {
+                        Vertex v = neighbours[Random.Range(0, neighbours.Length)];
+                        while (v.id == lastVertex.id)
+                            v = neighbours[Random.Range(0, neighbours.Length)];
+                        lastVertex = actualVertex;
+                        actualVertex = v;
+                    }
+
+                    nextPosition = actualVertex.GetComponent<Transform>().position;
+                    nextPosition.y = 0; // No se tiene en cuenta la altura
+
+                    agente.velocidad = Vector3.zero;
+                    isWaiting = true; // Se pone a esperar
+                }
+
+                // Se dirige hacia la posición objetivo
+                direccion.lineal = nextPosition - newPos;
+                direccion.lineal.Normalize();
+                direccion.lineal *= agente.velocidadMax;
+            }
+            return direccion;
+        }
+
+        // Devuelve la posición sin tener en cuenta la altura
+        private Vector3 GetPositionWithoutHeight()
+        {
+            return new Vector3(transform.position.x, 0, transform.position.z);
+        }
+
+        // Reinicia la posición objetivo
+        public void ResetPosition()
+        {
+            nextPosition = GetPositionWithoutHeight();
         }
     }
 }

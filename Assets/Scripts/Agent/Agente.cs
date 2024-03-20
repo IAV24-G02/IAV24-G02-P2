@@ -6,17 +6,16 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
-namespace UCM.IAV.Movimiento {
+using System.Collections.Generic;
+using UnityEngine;
 
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine; 
-
-/// <summary>
-/// La clase Agente es responsable de modelar los agentes y gestionar todos los comportamientos asociados para combinarlos (si es posible) 
-/// </summary>
-    public class Agente : MonoBehaviour {
+namespace UCM.IAV.Movimiento
+{
+    /// <summary>
+    /// La clase Agente es responsable de modelar los agentes y gestionar todos los comportamientos asociados para combinarlos (si es posible) 
+    /// </summary>
+    public class Agente : MonoBehaviour
+    {
         /// <summary>
         /// Combinar por peso
         /// </summary>
@@ -132,7 +131,7 @@ namespace UCM.IAV.Movimiento {
 
             // Limitamos la aceleración al máximo que acepta este agente (aunque normalmente vendrá ya limitada)
             if (direccion.lineal.sqrMagnitude > aceleracionMax)
-                direccion.lineal = direccion.lineal.normalized * aceleracionMax; 
+                direccion.lineal = direccion.lineal.normalized * aceleracionMax;
 
             // La opción por defecto sería usar ForceMode.Force, pero eso implicaría que el comportamiento de dirección tuviese en cuenta la masa a la hora de calcular la aceleración que se pide
             cuerpoRigido.AddForce(direccion.lineal, ForceMode.Acceleration);
@@ -183,7 +182,7 @@ namespace UCM.IAV.Movimiento {
 
             // Limito la velocidad lineal antes de empezar
             if (velocidad.magnitude > velocidadMax)
-                velocidad= velocidad.normalized * velocidadMax;
+                velocidad = velocidad.normalized * velocidadMax;
 
             // Limito la velocidad angular antes de empezar
             if (rotacion > rotacionMax)
@@ -220,7 +219,8 @@ namespace UCM.IAV.Movimiento {
                 grupos.Clear();
             }
 
-            if (cuerpoRigido != null) {
+            if (cuerpoRigido != null)
+            {
                 return; // El movimiento será dinámico, controlado por la física y FixedUpdate
             }
 
@@ -237,10 +237,10 @@ namespace UCM.IAV.Movimiento {
             rotacion += direccion.angular * Time.deltaTime;
 
             // Opcional: Esto es para actuar con contundencia si nos mandan parar (no es muy realista)
-            if (direccion.angular == 0.0f) 
-                rotacion = 0.0f; 
-            if (direccion.lineal.sqrMagnitude == 0.0f) 
-                velocidad = Vector3.zero; 
+            if (direccion.angular == 0.0f)
+                rotacion = 0.0f;
+            if (direccion.lineal.sqrMagnitude == 0.0f)
+                velocidad = Vector3.zero;
 
             /// En cada parte tardía del tick, encarar el agente (al menos para el avatar).... si es que queremos hacer este encaramiento
             transform.LookAt(transform.position + velocidad);

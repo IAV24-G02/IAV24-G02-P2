@@ -6,26 +6,23 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AnimalAnimationController : MonoBehaviour
 {
-    Animator animator;
+    private Animator animator;
 
     [SerializeField]
-    Rigidbody rigid;
+    private Rigidbody rigid;
 
     [SerializeField]
-    float threshold = 1.5f;
-    // Start is called before the first frame update
+    private float threshold = 1.5f;
+
     void Start()
     {
         animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (rigid.velocity.magnitude >= threshold)

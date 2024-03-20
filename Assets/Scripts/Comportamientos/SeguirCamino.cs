@@ -6,11 +6,14 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
+using UCM.IAV.Navegacion;
+using UnityEngine;
+
 namespace UCM.IAV.Movimiento
 {
-    using UCM.IAV.Navegacion;
-    using UnityEngine;
-
+    /// <summary>
+    /// Clase para modelar el comportamiento de SEGUIR un CAMINO
+    /// </summary>
     public class SeguirCamino: ComportamientoAgente
     {
         Transform sigNodo;

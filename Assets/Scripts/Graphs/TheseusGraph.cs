@@ -121,6 +121,12 @@ namespace UCM.IAV.Navegacion
             }
         }
 
+        // Devuelve el grafo
+        public Graph GetGraph()
+        {
+            return graph;
+        }
+
         // Devuelve el siguiente nodo del camino
         public virtual Transform GetNextNode()
         {
@@ -132,6 +138,7 @@ namespace UCM.IAV.Navegacion
             return null;
         }
 
+        // Actualiza la información del camino
         private void UpdatePathInfo()
         {
             if (pathLength == 0)
@@ -229,6 +236,9 @@ namespace UCM.IAV.Navegacion
             if (ReferenceEquals(graph, null))
                 return;
 
+            if (ReferenceEquals(path, null))
+                return;
+
             Vertex v;
             if (!ReferenceEquals(srcObj, null))
             {
@@ -242,9 +252,8 @@ namespace UCM.IAV.Navegacion
                 v = graph.GetNearestVertex(dstObj.transform.position);
                 Gizmos.DrawSphere(v.transform.position, pathNodeRadius);
             }
-            int i;
             Gizmos.color = pathColor;
-            for (i = 0; i < path.Count; i++)
+            for (int i = 0; i < path.Count; i++)
             {
                 v = path[i];
                 Gizmos.DrawSphere(v.transform.position, pathNodeRadius);
