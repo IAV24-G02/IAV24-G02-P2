@@ -79,7 +79,7 @@ namespace UCM.IAV.Navegacion
                 updateAriadna(!ariadna);
             }
 
-            if (Input.GetKeyDown(KeyCode.S))
+            if (Input.GetKeyDown(KeyCode.T))
                 smoothPath = !smoothPath;
 
             if (ariadna)

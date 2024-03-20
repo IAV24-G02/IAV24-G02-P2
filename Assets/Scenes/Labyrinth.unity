@@ -1106,7 +1106,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Activar/Desactivar suavizado - S
+  m_Text: Activar/Desacivar suavizado - T
 --- !u!222 &1035006753
 CanvasRenderer:
   m_ObjectHideFlags: 0
