@@ -41,7 +41,6 @@ namespace UCM.IAV.Navegacion
 
         void GenerateMino()
         {
-
             GameObject minoGO = Instantiate(minotaur, graph.GetRandomPos().transform.position + new Vector3(0, 0.3f, 0), Quaternion.identity);
         }
     }

@@ -6,9 +6,6 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
-
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UCM.IAV.Navegacion;
 using UnityEngine;
@@ -19,6 +16,7 @@ namespace UCM.IAV.Movimiento
 {
     public class GameManager : MonoBehaviour
     {
+        // Singleton
         public static GameManager instance = null;
 
         // Textos UI
@@ -37,19 +35,15 @@ namespace UCM.IAV.Movimiento
         float m_lastFramerate = 0.0f;
         float m_refreshTime = 0.5f;
 
-        private bool cameraPerspective = true;
-
         GameObject player = null;
         GameObject exitSlab = null;
         GameObject startSlab = null;
-
         GameObject exit = null;
 
         int numMinos = 1;
 
         private void Awake()
         {
-            // Hacemos que el gestor del juego sea un Ejemplar Único
             if (instance == null)
             {
                 instance = this;
@@ -60,31 +54,22 @@ namespace UCM.IAV.Movimiento
                 Destroy(this.gameObject);
             }
         }
+        void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
 
         private void Start()
         {
             Application.targetFrameRate = frameRate;
-
             FindGO();
         }
 
-        // Lo primero que se llama al activarse (tras el Awake)
-        void OnEnable()
-        {
-
-            // No necesito este delegado
-            //SceneManager.activeSceneChanged += OnSceneWasSwitched;
-
-            SceneManager.sceneLoaded += OnSceneLoaded;
-        }
-
         // Delegado para hacer cosas cuando una escena termina de cargar (no necesariamente cuando ha cambiado/switched)
-        // Antiguamente se usaba un método del SceneManager llamado OnLevelWasLoaded(int level), ahora obsoleto
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             FindGO();
         }
-
 
         // Se llama cuando el juego ha terminado
         void OnDisable()
@@ -208,6 +193,11 @@ namespace UCM.IAV.Movimiento
         public string getSize()
         {
             return mazeSize;
+        }
+
+        public void UpdatePathCost(Vector3 position, float costMultipliyer)
+        {
+            theseusGraph.UpdatePathCost(position, costMultipliyer);
         }
     }
 }

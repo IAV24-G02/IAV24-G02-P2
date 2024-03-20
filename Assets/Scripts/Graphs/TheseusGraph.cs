@@ -121,8 +121,7 @@ namespace UCM.IAV.Navegacion
             return null;
         }
 
-        // Dibujado de artilugios en el editor
-        // OJO, ESTO SÓLO SE PUEDE VER EN LA PESTAÑA DE SCENE DE UNITY
+        // Dibujado de esferas y líneas en el editor
         virtual public void OnDrawGizmos()
         {
             if (!Application.isPlaying)
@@ -235,6 +234,11 @@ namespace UCM.IAV.Navegacion
         public virtual void ResetPath()
         {
             path = null;
+        }
+
+        public void UpdatePathCost(Vector3 position, float costMultipliyer)
+        {
+            graph.UpdateVertexCost(position, costMultipliyer);
         }
 
         // Heurísticas
