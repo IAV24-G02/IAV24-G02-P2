@@ -65,7 +65,16 @@ namespace UCM.IAV.Navegacion
 
         public virtual void Update()
         {
-            updateAriadna(Input.GetKeyDown(KeyCode.Mouse1));
+            if (Input.GetKey(KeyCode.Mouse1))
+            {
+                if (!ariadna)
+                    updateAriadna(true);
+            }
+            else
+            {
+                if (ariadna)
+                    updateAriadna(false);
+            }
 
             if (Input.GetKeyDown(KeyCode.S))
                 smoothPath = !smoothPath;
