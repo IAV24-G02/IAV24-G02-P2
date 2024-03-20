@@ -128,14 +128,14 @@ namespace UCM.IAV.Navegacion
             return new List<Vertex>();
         }
 
-        public List<Vertex> GetPathAstar(GameObject startObject, GameObject endObject, Heuristic h = null)
+        public List<Vertex> GetPathAstar(GameObject startObject, GameObject endObject, Heuristic heuristic = null)
         {
             Vertex startNode = GetNearestVertex(startObject.transform.position);
             Vertex goalNode = GetNearestVertex(endObject.transform.position);
             if (startNode == null || goalNode == null)
                 return null;
 
-            NodeRecord startRecord = new NodeRecord(startNode, null, 0, h(startNode, goalNode));
+            NodeRecord startRecord = new NodeRecord(startNode, null, 0, heuristic(startNode, goalNode));
 
             PathFindingList open = new PathFindingList();
             open.Add(startRecord);
@@ -180,8 +180,8 @@ namespace UCM.IAV.Navegacion
                     }
                     else
                     {
-                        endNodeRecord = new NodeRecord(endNode, current, defaultCost);
-                        endNodeHeuristic = h(endNode, goalNode);
+                        endNodeRecord = new NodeRecord(endNode, current, connection.Cost);
+                        endNodeHeuristic = heuristic(endNode, goalNode);
                     }
 
                     endNodeRecord.CostSoFar = endNodeCost;
@@ -200,7 +200,7 @@ namespace UCM.IAV.Navegacion
             else
             {
                 path = new List<Vertex>() { current.Node }; // path.Add(current.Node);
-                while (current.PreviousNode != null)
+                while (current.PreviousNode != startRecord.PreviousNode)
                 {
                     path.Add(current.PreviousNode.Node);
                     current = current.PreviousNode;

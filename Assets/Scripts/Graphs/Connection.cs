@@ -1,4 +1,3 @@
-using System.Collections;
 using UCM.IAV.Navegacion;
 
 public class Connection

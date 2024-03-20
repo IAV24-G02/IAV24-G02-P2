@@ -83,51 +83,31 @@ class Vertex:
 
 # Estructura de conexión/arista: contiene el nodo origen, el nodo destino y el coste de la conexión/arista
 class Connection:
-    fromNode : Vertex   # Nodo origen
-    toNode : Vertex     # Nodo destino
-    cost : float        # Coste de la conexión
-
-    # Devuelve el nodo origen
-    function getFromNode() -> Vertex:
-        return fromNode
-
-    # Devuelve el nodo destino
-    function getToNode() -> Vertex:
-        return toNode
-
-    # Devuelve el coste de la conexión
-    function getCost() -> float:
-        return cost
-
-# Estructura de heurística: contiene el nodo objetivo y tiene un método para estimar el coste entre dos nodos
-class Heuristic:
-    goalNode : Vertex   # Nodo objetivo
-
-    # Estima el coste entre dos nodos
-    function estimate(fromNode : Vertex) -> float:
-        return estimate(fromNode, goalNode)
-
-    # Estima el coste entre dos nodos
-    function estimate(fromNode : Vertex, toNode : Vertex) -> float
+    FromNode : Vertex   # Nodo origen
+    ToNode : Vertex     # Nodo destino
+    Cost : float        # Coste de la conexión
 
 # Estructura de Grafo: representación de una escena de juego como un grafo
 class Graph:
     vertices : Vertex[]                 # Lista de nodos
-    neighbours : Vertex[][]             # Lista de nodos vecinos a partir de cada nodo
+    neighbourVertex : Vertex[][]        # Lista de nodos vecinos a partir de cada nodo
     costs : float[][]                   # Lista de costes entre nodos
     mapVertices : bool[][]              # Mapa de nodos
     costsVertices : float[][]           # Coste acumulado entre nodos
     numCols : int                       # Número de columnas
     numRows : int                       # Número de filas
-    path : Vertex[]                     # Camino solución
     neighbourConnections : Connection[] # Conexiones de los nodos vecinos
+    path : Vertex[]                     # Camino solución
 
-    # Devuelve las conexiones a partir de vertex y sus vecinos
+    # Estructura de heurística: método para estimar el coste entre dos nodos
+    function Heuristic(a : Vertex, b : Vertex) -> float
+
+    # Devuelve las conexiones a partir de un nodo
     function Connection[] GetConnectionNeighbours(Vertex vertex) -> Connection[]:
-        connections : Connection[]
+        connections : Connection[] # Set de conexiones (para evitar duplicados)
 
         for Connection connection in neighbourConnections:
-            if connection.getFromNode() == vertex:
+            if connection.FromNode() == vertex:
                 connections.add(connection)
         return connections
 
@@ -139,104 +119,112 @@ class Graph:
 
         # Estructura de registro de nodo que incluye el nodo, la conexión, el coste hasta el momento y el coste total estimado
         class NodeRecord:
-            node : Vertex               # Nodo seleccionado
-            connection : Connection     # Conexión seleccionada a partir del nodo seleccionado
-            costSoFar: float            # Coste acumulado hasta el nodo seleccionado
-            estimatedTotalCost: float   # Coste total estimado hasta el nodo seleccionado
-            cost: float                 # Coste actual
+            Node : Vertex               # Nodo seleccionado
+            PreviousNode : NodeRedord   # Referencia al nodo anterior
+            Cost: float                 # Coste de la conexión entre node y previousNode
+            CostSoFar: float            # Coste acumulado hasta el nodo seleccionado
+            EstimatedTotalCost: float   # Coste total estimado hasta el nodo seleccionado
         
         # Estructura de lista de nodos para pathfinding
         class PathFindingList:
-            # Lista de nodos
-            records : NodeRecord[]
+            records : NodeRecord[]    # Lista de NodeRecords
 
             # Añade un nodo a la lista
-            function add(nodeRecord : NodeRecord):
-                records += nodeRecord
+            function Add(nodeRecord : NodeRecord):
+                records += nodeRecord   # En el código real se implementa una inserción
 
             # Elimina un nodo de la lista
-            function remove(nodeRecord : NodeRecord):
-                records -= nodeRecord
-
-            # Comprueba si la lista contiene un nodo
-            function contains(node : Vertex) -> bool:
-                return records.find(node).length > 0
+            function Remove(nodeRecord : NodeRecord):
+                records -= nodeRecord  # En el código real se implementa una eliminación
 
             # Encuentra un nodo en la lista
-            function find(node : Vertex) -> NodeRecord:
-                return records.find(node)
+            function Find(node : Vertex) -> NodeRecord:
+                return records.find(node)   # En el código real se implementa una búsqueda
+
+            # Comprueba si la lista contiene un nodo
+            function Contains(node : Vertex) -> bool:
+                return records.Find(node) != null
 
             # Devuelve el nodo con menor coste total estimado
-            function smallestElement() -> NodeRecord:
+            function SmallestElement() -> NodeRecord:
                 return records.minBy(record => record.estimatedTotalCost)
 
+            # Devuelve la longitud de la lista
+            function Length() -> int:
+                return records.length
+
         # Inicializa el nodo de inicio
+        # Consigue el nodo más cercano a partir de la posición de inicio del jugador
+        Vertex startNode = GetNearestVertex(startObj.transform.position)
+        # Consigue el nodo más cercano a partir de la posición de salida
         Vertex goalNode = GetNearestVertex(endObj.transform.position)
         startRecord = new NodeRecord()
-        startRecord.node = GetNearestVertex(startObj.transform.position)
-        startRecord.connection = null
-        startRecord.costSoFar = 0
-        startRecord.estimatedTotalCost = heuristic.estimate(startRecord.node, goalNode)
+        startRecord.Node = startNode
+        startRecord.PreviousNode = null
+        startRecord.CostSoFar = 0
+        startRecord.EstimatedTotalCost = heuristic(startNode, goalNode)
 
-        # Initialize the open and close lists
+        # Inicializa las listas abierta y cerrada
         open = new PathfindingList()
         open.add(startRecord)
         closed = new PathfindingList()
+
         NodeRecord current = new NodeRecord()
 
         # Mientras haya nodos en la lista abierta
-        while length(open) > 0:
+        while open.Length() > 0:
             # Coge el nodo con menor coste total estimado
-            current = open.smallestElement() *cola de prioridad de mínimos*
+            current = open.SmallestElement()
             
             # Si el nodo es el nodo de fin, termina
-            if current.node == goal:
+            if current.Node == goal:
                 break
 
             # Si no, coge las conexiones que hay entre el nodo actual y sus vecinos
-            connections : Connection[] = GetConnectionNeighbours(current.node)
+            connections : Connection[] = GetConnectionNeighbours(current.Node)
 
             # Itera sobre las conexiones para cada nodo vecino
             for connection in connections:
                 # Coge el nodo vecino
-                endNode = connection.getToNode()
-                endNodeCost = current.costSoFar + connection.getCost() *f = g + h*
-                endNodeRecord = new NodeRecord()
+                endNode = connection.ToNode
+                endNodeCost = current.CostSoFar + connection.Cost() *f = g + h*
+                endNodeRecord : NodeRecord
                 endNodeHeuristic : float
 
                 # Si el nodo vecino está en la lista cerrada, continúa
-                if closed.contains(endNode):
-                    endNodeRecord = closed.find(endNode)
+                if closed.Contains(endNode):
+                    endNodeRecord = closed.Find(endNode)
 
                     # Si sigue siendo más barato, continúa
-                    if endNodeRecord.costSoFar <= endNodeCost:
+                    if endNodeRecord.CostSoFar <= endNodeCost:
                         continue
 
                     # Si no, se quita de la lista cerrada
                     closed.remove(endNodeRecord)
 
-                    endNodeHeuristic = endNodeRecord.estimatedTotalCost - endNodeRecord.costSoFar
+                    endNodeHeuristic = endNodeRecord.EstimatedTotalCost - endNodeRecord.CostSoFar
                     
                 # Si el nodo vecino está en la lista abierta
-                else if open.contains(endNode):
+                else if open.Contains(endNode):
 
                     # Coge el registro del nodo vecino de la lista abierta
-                    endNodeRecord = open.find(endNode)
+                    endNodeRecord = open.Find(endNode)
 
-                    if endNodeRecord.costSoFar <= endNodeCost:
+                    if endNodeRecord.CostSoFar <= endNodeCost:
                         continue
 
-                    endNodeHeuristic = endNodeRecord.cost - endNodeRecord.costSoFar
+                    endNodeHeuristic = endNodeRecord.Cost - endNodeRecord.CostSoFar
                 
                 # Si no, crea un registro para el nodo vecino
                 else:
                     endNodeRecord = new NodeRecord()
-                    endNodeRecord.node = endNode
-                    endNodeHeuristic = heuristic.estimate(endNode, goalNode)
+                    endNodeRecord.Node = endNode
+                    endNodeRecord.PreviousNode = current
+                    endNodeRecord.Cost = connection.Cost
+                    endNodeHeuristic = heuristic(endNode, goalNode)
                 
-                endNodeRecord.cost = endNodeCost
-                endNodeRecord.connection = connection
-                endNodeRecord.estimatedTotalCost = endNodeCost + endNodeHeuristic
+                endNodeRecord.CostSoFar = endNodeCost
+                endNodeRecord.EstimatedTotalCost = endNodeCost + endNodeHeuristic
 
                 # Si el nodo vecino no está en la lista abierta, se añade
                 if not open.contains(endNode):
@@ -247,19 +235,20 @@ class Graph:
             closed.add(current)
 
         # Si no se ha encontrado el nodo de fin, no hay solución
-        if current.node != goal:
+        if current.Node != goal:
             return null
 
         else:
-            path = []
+            path = []  # Camino solución
+            path.add(current.Node)
+
             # Reconstruye el camino
-            while current.node != start:
-                path.add(current.connection)
-                current = current.connection.getFromNode()
+            while current.PreviousNode != startRecord.PreviousNode:
+                path.add(current.PreviousNode.Node)
+                current = current.PreviousNode
 
             # Devuelve el camino reconstruido en orden inverso
             return reverse(path)
-
 ```
 
 D. El propio algoritmo de A* requerirá un suavizado si queremos que el personaje encuentre el camino correctamente y éste llegue a su destino. Para ello, se recurrirá al libro _AI for Games_ de Ian Millington. En dicho libro, Millington menciona que los grafos basados en mosaicos pueden en ocasiones ser algo erráticos por lo que, para que la inteligencia artificial parezca medianamente inteligente, se utilizan adicionalmente comportamientos de dirección como los vistos en la práctica anterior que hagan suavizar dichos movimientos. Estos comportamientos son esenciales si se quiere que las IA parezcan inteligentes en su comportamiento y, aunque sea fácil de implementar, requiere consultas constantes a nivel de geometría, por lo que el rendimiento puede en consecuencia verse afectado.
@@ -273,8 +262,7 @@ Aunque dicho algoritmo produce un camino suavizado, éste no busca todos los pos
 
 Millington, en base a lo explicado anteriormente, plantea el siguiente _pseudo-código_, donde se acepta un camino de nodos ya establecido sin suavizar y lo devuelve suavizado:
 
-```
-
+```pseudo
 function smoothPath(inputPath: Vector[]) -> Vector[]:
     # Si el camino es solo de dos nodos de longitud, entonces no se puede
     # suavizar
@@ -305,9 +293,7 @@ function smoothPath(inputPath: Vector[]) -> Vector[]:
     outputPath += inputPath[len(inputPath) - 1]
 
     return outputPath
-
 ```
-
 
 ## Pruebas y métricas
 
