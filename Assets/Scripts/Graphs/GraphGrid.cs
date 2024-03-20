@@ -37,11 +37,6 @@ namespace UCM.IAV.Navegacion
         public string mapName = "10x10.map"; // Fichero por defecto
         public bool get8Vicinity = false;
         public float cellSize = 1f;
-        //[Range(0, Mathf.Infinity)]
-        //public float defaultCost = 1f;
-        //[Range(0, Mathf.Infinity)]
-        //public float maximumCost = Mathf.Infinity;
-
 
         GameObject[] vertexObjs;
 

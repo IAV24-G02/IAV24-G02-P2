@@ -350,9 +350,10 @@ MonoBehaviour:
   graph: {fileID: 1574568752}
   algorithm: 2
   smoothPath: 0
-  vertexTag: Vertex
-  obstacleTag: Wall
-  pathColor: {r: 0.98039216, g: 0.9679816, b: 0.015686247, a: 1}
+  spherePrefab: {fileID: 232123683982798555, guid: f767316f7e7aae549812744b17169618,
+    type: 3}
+  pathThreadMaterial: {fileID: 2100000, guid: 0bfec39a2db2db94bb6db43dbdd7a5c4, type: 2}
+  pathColor: {r: 1, g: 1, b: 1, a: 1}
   pathNodeRadius: 0.433
 --- !u!4 &478290964
 Transform:
@@ -586,8 +587,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -658.7, y: 506.3}
-  m_SizeDelta: {x: 234.1045, y: 39.222}
+  m_AnchoredPosition: {x: -658.7, y: 507.54996}
+  m_SizeDelta: {x: 234.1045, y: 41.722}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &562583161
 MonoBehaviour:
@@ -622,7 +623,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: fr
+  m_Text: FR
 --- !u!222 &562583162
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1105,7 +1106,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Activar/Desacivar suavizado - S
+  m_Text: Activar/Desactivar suavizado - S
 --- !u!222 &1035006753
 CanvasRenderer:
   m_ObjectHideFlags: 0

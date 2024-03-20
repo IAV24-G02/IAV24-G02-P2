@@ -20,25 +20,17 @@ namespace UCM.IAV.Movimiento
         SeguirCamino segCam;
         ControlJugador contJug;
 
-        // Start is called before the first frame update
         void Start()
         {
             segCam = GetComponent<SeguirCamino>();
             contJug = GetComponent<ControlJugador>();
         }
 
-        // Update is called once per frame
         void Update()
         {
-            if (Input.GetKey(KeyCode.Mouse1))
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                if(!ariadna)
-                updateAriadna(true);
-            }
-            else
-            {
-                if(ariadna)
-                updateAriadna(false);
+                updateAriadna(!ariadna);
             }
         }
 

@@ -34,6 +34,14 @@ namespace UCM.IAV.Navegacion
         private bool smoothPath;                // Suavizar el camino
 
         [SerializeField]
+        private GameObject spherePrefab;        // Prefab de esfera
+
+        List<GameObject> pathSpheres;           // Esferas del camino
+
+        [SerializeField]
+        private Material pathThreadMaterial;    // Material del camino
+
+        [SerializeField]
         private Color pathColor;                // Color del camino
 
         [SerializeField]
@@ -61,19 +69,14 @@ namespace UCM.IAV.Navegacion
             hilo.startWidth = 0.15f;
             hilo.endWidth = 0.15f;
             hilo.positionCount = 0;
+            pathSpheres = new List<GameObject>();
         }
 
         public virtual void Update()
         {
-            if (Input.GetKey(KeyCode.Mouse1))
+            if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                if (!ariadna)
-                    updateAriadna(true);
-            }
-            else
-            {
-                if (ariadna)
-                    updateAriadna(false);
+                updateAriadna(!ariadna);
             }
 
             if (Input.GetKeyDown(KeyCode.S))
@@ -104,9 +107,8 @@ namespace UCM.IAV.Navegacion
 
                 if (path != null && path.Count > 0)
                 {
-                    //GameManager.instance.SetPlayerNode(path[path.Count - 1].transform);
-
-                    DibujaHilo();
+                    DrawThread();
+                    DrawSpheres();
                 }
             }
         }
@@ -156,6 +158,35 @@ namespace UCM.IAV.Navegacion
             }
         }
 
+        public void DrawSpheres()
+        {
+            if (spherePrefab == null)
+                return;
+
+            RemoveSpheres();
+
+            foreach (Vertex pathVertex in path)
+            {
+                GameObject pathSphere = Instantiate(spherePrefab, pathVertex.transform.position, Quaternion.identity);
+                pathSphere.transform.localScale = Vector3.one * pathNodeRadius;
+
+                Renderer sphereRenderer = pathSphere.GetComponent<Renderer>();
+                if (sphereRenderer != null) sphereRenderer.material.color = pathColor;
+                else Debug.LogWarning("No se encontró componente Renderer en el prefab de la esfera");
+                
+                pathSpheres.Add(pathSphere);
+            }
+        }
+
+        public void RemoveSpheres()
+        {
+            foreach (GameObject go in pathSpheres)
+            {
+                Destroy(go);
+            }
+            pathSpheres.Clear();
+        }
+
         // Mostrar el camino calculado
         public void ShowPathVertices(List<Vertex> path, Color color)
         {
@@ -171,7 +202,7 @@ namespace UCM.IAV.Navegacion
         }
 
         // Dibuja el hilo de Ariadna
-        public virtual void DibujaHilo()
+        public virtual void DrawThread()
         {
             hilo.positionCount = path.Count + 1;
             hilo.SetPosition(0, new Vector3(srcObj.transform.position.x, srcObj.transform.position.y + hiloOffset, srcObj.transform.position.z));
@@ -180,6 +211,8 @@ namespace UCM.IAV.Navegacion
             {
                 Vector3 vertexPos = new Vector3(path[i].transform.position.x, path[i].transform.position.y + hiloOffset, path[i].transform.position.z);
                 hilo.SetPosition(path.Count - i, vertexPos);
+                pathThreadMaterial.EnableKeyword("_EMISSION");
+                pathThreadMaterial.SetColor("_EmissionColor", pathColor);
             }
         }
 
@@ -187,6 +220,10 @@ namespace UCM.IAV.Navegacion
         {
             ariadna = ar;
             hilo.enabled = ariadna;
+            if (!ariadna)
+            {
+                RemoveSpheres();
+            }
         }
 
         public string ChangeHeuristic()
