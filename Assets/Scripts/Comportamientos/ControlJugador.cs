@@ -8,36 +8,64 @@
 */
 namespace UCM.IAV.Movimiento
 {
-
     using UnityEngine;
 
-    /// <summary>
-    /// Clara para el comportamiento de agente que consiste en ser el jugador
-    /// </summary>
     public class ControlJugador: ComportamientoAgente
     {
-        /// <summary>
-        /// Obtiene la dirección
-        /// </summary>
-        /// <returns></returns>
-        /// 
+        private Vector3 worldPoint;             // Punto en el mundo
+        private Camera mainCamera;              // Cámara principal
 
-        //float tiempoGiroSuave = 0.1f;
-        //float velocidadGiroSuave;
+        [SerializeField]
+        private string vertexTag = "Vertex";    // Etiqueta de un nodo normal
+
+        [SerializeField]
+        private string obstacleTag = "Wall";    // Etiqueta de un obstáculo, tipo pared...
+
+        public override void Awake()
+        {
+            base.Awake();
+            mainCamera = Camera.main;
+        }
+
+        private GameObject GetNodeFromScreen(Vector3 screenPosition)
+        {
+            GameObject node = null;
+            Ray ray = mainCamera.ScreenPointToRay(screenPosition);
+            RaycastHit[] hits = Physics.RaycastAll(ray);
+            foreach (RaycastHit h in hits)
+            {
+                if (!h.collider.CompareTag(vertexTag) && !h.collider.CompareTag(obstacleTag))
+                    continue;
+                node = h.collider.gameObject;
+                break;
+            }
+            return node;
+        }
 
         public override Direccion GetDireccion()
         {
             Direccion direccion = new Direccion();
-            
-            //Direccion actual
-            direccion.lineal.x = Input.GetAxis("Horizontal");
-            direccion.lineal.z = Input.GetAxis("Vertical");
 
-            //Resto de cálculo de movimiento
+            if (Input.GetMouseButton(0))
+            {
+                GameObject node = GetNodeFromScreen(Input.mousePosition);
+                if (node != null)
+                {
+                    worldPoint = node.transform.position;
+                    direccion.lineal.x = worldPoint.x - agente.transform.position.x;
+                    direccion.lineal.z = worldPoint.z - agente.transform.position.z;
+                }
+            }
+            else
+            {
+                // Direccion actual
+                direccion.lineal.x = Input.GetAxis("Horizontal");
+                direccion.lineal.z = Input.GetAxis("Vertical");
+            }
+
+            // Resto de cálculo de movimiento
             direccion.lineal.Normalize();
             direccion.lineal *= agente.aceleracionMax;
-
-            // Podríamos meter una rotación automática en la dirección del movimiento, si quisiéramos
 
             return direccion;
         }

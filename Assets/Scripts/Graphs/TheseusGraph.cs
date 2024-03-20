@@ -25,43 +25,33 @@ namespace UCM.IAV.Navegacion
     public class TheseusGraph : MonoBehaviour
     {
         [SerializeField]
-        protected Graph graph;
+        protected Graph graph;                  // Grafo de nodos
 
         [SerializeField]
-        private TesterGraphAlgorithm algorithm;
+        private TesterGraphAlgorithm algorithm; // Algoritmo a usar
 
         [SerializeField]
-        private bool smoothPath;
+        private bool smoothPath;                // Suavizar el camino
 
         [SerializeField]
-        private string vertexTag = "Vertex"; // Etiqueta de un nodo normal
-
-        [SerializeField]
-        private string obstacleTag = "Wall"; // Etiqueta de un obstáculo, tipo pared...
-
-        [SerializeField]
-        private Color pathColor;
+        private Color pathColor;                // Color del camino
 
         [SerializeField]
         [Range(0.1f, 1f)]
-        private float pathNodeRadius = .3f;
+        private float pathNodeRadius = .3f;     // Radio de los nodos del camino
 
-        private bool ariadna;
+        private bool ariadna;                   // Activa o desactiva el hilo de Ariadna
 
+        bool firstHeuristic = true;             // Indica si se está usando la primera heurística
+        protected GameObject srcObj;            // Objeto origen
+        protected GameObject dstObj;            // Objeto destino
+        protected List<Vertex> path;            // Camino calculado
 
-        bool firstHeuristic = true;
-        Camera mainCamera;
-        protected GameObject srcObj;
-        protected GameObject dstObj;
-        protected List<Vertex> path; // La variable con el camino calculado
+        protected LineRenderer hilo;            // Hilo de Ariadna
+        protected float hiloOffset = 0.2f;      // Offset del hilo
 
-        protected LineRenderer hilo;
-        protected float hiloOffset = 0.2f;
-
-        // Despertar inicializando esto
         public virtual void Awake()
         {
-            mainCamera = Camera.main;
             srcObj = GameManager.instance.GetPlayer();
             dstObj = null;
             path = null;
@@ -73,37 +63,23 @@ namespace UCM.IAV.Navegacion
             hilo.positionCount = 0;
         }
 
-        // Update is called once per frame
         public virtual void Update()
         {
-            if (Input.GetKey(KeyCode.Mouse1))
-            {
-                if (!ariadna)
-                    updateAriadna(true);
-            }
-            else
-            {
-                if (ariadna)
-                    updateAriadna(false);
-            }
-
+            updateAriadna(Input.GetKeyDown(KeyCode.Mouse1));
 
             if (Input.GetKeyDown(KeyCode.S))
                 smoothPath = !smoothPath;
 
             if (ariadna)
             {
-                //Source jugador y destino el nodo final
                 if (srcObj == null) srcObj = GameManager.instance.GetPlayer();
                 if (dstObj == null) dstObj = GameManager.instance.GetExitNode();
-
-                //path = new List<Vertex>();
 
                 switch (algorithm)
                 {
                     case TesterGraphAlgorithm.ASTAR:
-                        if (firstHeuristic) path = graph.GetPathAstar(srcObj, dstObj, Euclidean); // COMO SEGUNDO ARGUMENTO SE DEBERÍA PASAR LA HEURÍSTICA
-                        else path = graph.GetPathAstar(srcObj, dstObj, Manhattan); // COMO SEGUNDO ARGUMENTO SE DEBERÍA PASAR LA HEURÍSTICA
+                        if (firstHeuristic) path = graph.GetPathAstar(srcObj, dstObj, Euclidean);
+                        else path = graph.GetPathAstar(srcObj, dstObj, Manhattan);
                         break;
                     default:
                     case TesterGraphAlgorithm.BFS:
@@ -113,6 +89,7 @@ namespace UCM.IAV.Navegacion
                         path = graph.GetPathDFS(srcObj, dstObj);
                         break;
                 }
+
                 if (smoothPath)
                     path = graph.Smooth(path); // Suavizar el camino, una vez calculado
 
@@ -184,22 +161,6 @@ namespace UCM.IAV.Navegacion
             }
         }
 
-        // Cuantificación, cómo traduce de posiciones del espacio (la pantalla) a nodos
-        private GameObject GetNodeFromScreen(Vector3 screenPosition)
-        {
-            GameObject node = null;
-            Ray ray = mainCamera.ScreenPointToRay(screenPosition);
-            RaycastHit[] hits = Physics.RaycastAll(ray);
-            foreach (RaycastHit h in hits)
-            {
-                if (!h.collider.CompareTag(vertexTag) && !h.collider.CompareTag(obstacleTag))
-                    continue;
-                node = h.collider.gameObject;
-                break;
-            }
-            return node;
-        }
-
         // Dibuja el hilo de Ariadna
         public virtual void DibujaHilo()
         {
@@ -221,7 +182,6 @@ namespace UCM.IAV.Navegacion
 
         public string ChangeHeuristic()
         {
-            // Está preparado para tener 2 heurísticas diferentes
             firstHeuristic = !firstHeuristic;
             return firstHeuristic ? "Euclidea" : "Manhattan";
         }
@@ -231,6 +191,7 @@ namespace UCM.IAV.Navegacion
             path = null;
         }
 
+        // Heurísticas
         public float Euclidean(Vertex a, Vertex b)
         {
             return Vector3.Distance(a.transform.position, b.transform.position);
