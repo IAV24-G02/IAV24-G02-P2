@@ -771,7 +771,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   peso: 0.7
   prioridad: 1
-  objetivo: {fileID: 0}
+  objetivo: {fileID: 5587432493576105249, guid: c391d0bafd410864ca5d0cc1bd083ed3,
+    type: 3}
   radioObjetivo: 0.2
   radioRalentizado: 3
   fuerzaRalentizado: 4
