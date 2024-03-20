@@ -19,7 +19,7 @@ public class DropDown : MonoBehaviour
     {
        // Establece changeSize al OnValueChanged del Dropdown
         if(!mino)
-            gameObject.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { UCM.IAV.Movimiento.GameManager.instance.ChangeSize(); });
+            gameObject.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { UCM.IAV.Movimiento.GameManager.instance.ChangeMazeSize(); });
        else
             gameObject.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { UCM.IAV.Movimiento.GameManager.instance.setNumMinos(); });
 

@@ -8,35 +8,32 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
-using UnityEngine;
-
 namespace UCM.IAV.Movimiento
 {
+    using UnityEngine;
+
     /// <summary>
     /// Clase para modelar el comportamiento de SEGUIR a otro agente
     /// </summary>
     public class Llegada : ComportamientoAgente
     {
-        /// <summary>
-        /// Obtiene la dirección
-        /// </summary>
-        /// <returns></returns>
-        /// 
+        [SerializeField]
+        private float targetRadius; // El radio para llegar al objetivo
 
+        [SerializeField]
+        private float slowingRadius; // El radio en el que se empieza a ralentizarse
 
-        // El radio para llegar al objetivo
-        public float radioObjetivo;
+        [SerializeField]
+        private float slowingForce; // La fuerza de ralentizado
 
-        // El radio en el que se empieza a ralentizarse
-        public float radioRalentizado;
+        [SerializeField]
+        private float avoidQuantity = 5; // Cantidad de evasión
 
-        public float fuerzaRalentizado;
+        [SerializeField]
+        private int raycastDistance = 7;   // Distancia de raycast
 
-        public float avoidQuantity = 5;
-        public int distance = 7;
+        private float timeToTarget = 0.1f; // El tiempo en el que conseguir la aceleracion objetivo
 
-        // El tiempo en el que conseguir la aceleracion objetivo
-        float timeToTarget = 0.1f;
         public override Direccion GetDireccion()
         {
             Direccion direccion = new Direccion();
@@ -45,7 +42,7 @@ namespace UCM.IAV.Movimiento
             float distance = (objetivo.transform.position - transform.position).magnitude;
 
             // Si ha alcanzado el radio objetivo se para
-            if (distance < radioObjetivo)
+            if (distance < targetRadius)
             {
                 direccion.lineal = new Vector3(0, 0, 0);
                 return direccion;
@@ -54,11 +51,11 @@ namespace UCM.IAV.Movimiento
             float targetAccel;
 
             // Máxima aceleración desde fuera del radio de frenado
-            if (distance > radioRalentizado)
+            if (distance > slowingRadius)
                 targetAccel = agente.aceleracionMax;
             // Aceleración escalada
             else
-                targetAccel = agente.aceleracionMax * distance / (radioRalentizado * fuerzaRalentizado);
+                targetAccel = agente.aceleracionMax * distance / (slowingRadius * slowingForce);
 
             // Velocity combina aceleración y dirección
             Vector3 targetVelocity = objetivo.transform.position - transform.position;
@@ -78,19 +75,18 @@ namespace UCM.IAV.Movimiento
                 direccion.lineal *= agente.aceleracionMax;
             }
 
-
             return direccion;
         }
 
         Vector3 RayCastCollision(Vector3 pos, Vector3 dir, LayerMask lMask)
         {
             RaycastHit hit;
-            if (Physics.Raycast(pos, dir, out hit, distance, lMask))
+            if (Physics.Raycast(pos, dir, out hit, raycastDistance, lMask))
             {
                 // Find the line from the gun to the point that was clicked.
                 Vector3 incomingVec = hit.point - pos;
 
-                if (incomingVec.magnitude > distance) return Vector3.zero;
+                if (incomingVec.magnitude > raycastDistance) return Vector3.zero;
 
                 // Use the point's normal to calculate the reflection vector.
                 Vector3 reflectVec = Vector3.Reflect(incomingVec, hit.normal);

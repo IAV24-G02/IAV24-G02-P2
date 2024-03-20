@@ -6,10 +6,8 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
-
 namespace UCM.IAV.Movimiento
 {
-    using System;
     using UCM.IAV.Navegacion;
     using UnityEngine;
 
@@ -31,7 +29,6 @@ namespace UCM.IAV.Movimiento
 
             if (sigNodo != null)
             {
-                //Direccion actual
                 direccion.lineal = sigNodo.position - transform.position;
             }
             else
@@ -39,11 +36,8 @@ namespace UCM.IAV.Movimiento
                 direccion.lineal = new Vector3(0, 0, 0);
             }
 
-            //Resto de cálculo de movimiento
             direccion.lineal.Normalize();
             direccion.lineal *= agente.aceleracionMax;
-
-            // Podríamos meter una rotación automática en la dirección del movimiento, si quisiéramos
 
             return direccion;
         }

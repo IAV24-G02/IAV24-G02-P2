@@ -9,11 +9,18 @@
 namespace UCM.IAV.Navegacion
 {
     using UnityEngine;
+    using System;
+    using UCM.IAV.Movimiento;
 
     [System.Serializable]
-    public class Vertex : MonoBehaviour
+    public class Vertex : MonoBehaviour, IComparable<Vertex>
     {
         public int id; // Identificador del nodo
+        
+        public int CompareTo(Vertex other)
+        {
+            return this.id.CompareTo(other.id);
+        }
 
         public bool Equals(Vertex other)
         {

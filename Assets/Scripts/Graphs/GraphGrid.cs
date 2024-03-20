@@ -38,11 +38,16 @@ namespace UCM.IAV.Navegacion
         public bool get8Vicinity = false;
         public float cellSize = 1f;
 
+        [Range(0, Mathf.Infinity)]
+        public float defaultCost = 1f;
+        [Range(0, Mathf.Infinity)]
+        public float maximumCost = Mathf.Infinity;
+
         GameObject[] vertexObjs;
 
         private void Awake()
         {
-            mapName = GameManager.instance.getSize() + ".map";
+            mapName = GameManager.instance.getMazeSize() + ".map";
         }
 
         private int GridToId(int x, int y)
@@ -354,6 +359,5 @@ namespace UCM.IAV.Navegacion
 
             return Instantiate(obstaclePrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
         }
-
     }
 }

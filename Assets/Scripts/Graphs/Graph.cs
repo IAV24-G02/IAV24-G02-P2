@@ -8,43 +8,28 @@
 */
 namespace UCM.IAV.Navegacion
 {
-
     using UnityEngine;
-    using System.Collections;
     using System.Collections.Generic;
-    using Unity.PlasticSCM.Editor.WebApi;
-    using System.Runtime.InteropServices;
-    using UnityEditor.Experimental.GraphView;
-    using System.Linq;
 
     /// <summary>
-    /// Abstract class for graphs
+    /// Clase abstracta para grafos
     /// </summary>
     public abstract class Graph : MonoBehaviour
     {
-        // Aquí el grafo entero es representado con estas listas, que luego puede aprovechar el algoritmo A*.
-        // El pseudocódigo de Millington no asume que tengamos toda la información del grafo representada y por eso va guardando registros de los nodos que visita.
-        public GameObject vertexPrefab;
-        protected List<Vertex> vertices;
-        protected List<List<Vertex>> neighbourVertex;
-        protected List<List<float>> costs;
-        protected bool[,] mapVertices;
-        protected float[,] costsVertices;
-        protected int numCols, numRows;
-        protected List<Connection> neighbourConnections;
+        public GameObject vertexPrefab;                         // Prefab de vértice
+        protected List<Vertex> vertices;                        // Lista de vértices
+        protected List<List<Vertex>> neighbourVertex;           // Lista de vecinos de cada vértice
+        protected List<List<float>> costs;                      // Costes de las conexiones
+        protected bool[,] mapVertices;                          // Mapa de vértices
+        protected float[,] costsVertices;                       // Costes de los vértices
+        protected int numCols, numRows;                         // Número de columnas y filas
+        protected List<Connection> neighbourConnections;        // Listas de conexiones vecinas
 
-        // this is for informed search like A*
-        // Un delegado especifica la cabecera de una función, la que sea, que cumpla con esos parámetros y devuelva ese tipo.
-        // Cuidado al implementarlas, porque no puede ser que la distancia -por ejemplo- entre dos casillas tenga una heurística más cara que el coste real de navegar de una a otra.
+        // Delegado para la heurística
         public delegate float Heuristic(Vertex a, Vertex b);
 
         // Used for getting path in frames
         public List<Vertex> path;
-
-        [Range(0, Mathf.Infinity)]
-        public float defaultCost = 1f;
-        [Range(0, Mathf.Infinity)]
-        public float maximumCost = Mathf.Infinity;
 
         public virtual void Start()
         {
@@ -71,21 +56,19 @@ namespace UCM.IAV.Navegacion
         {
             return null;
         }
-        public virtual List<Connection> GetConnectionNeighbours(Vertex v)
+
+        // Devuelve una lista de conexiones vecinas
+        public virtual HashSet<Connection> GetConnectionNeighbours(Vertex v)
         {
             // Usar un set para evitar la duplicación de conexiones
             HashSet<Connection> uniqueConnections = new HashSet<Connection>();
-
             foreach (Connection connection in neighbourConnections)
             {
                 if (connection != null && connection.FromNode == v)
-                {
                     uniqueConnections.Add(connection);
-                }
             }
-
             // Devolverlo como una lista
-            return uniqueConnections.ToList();
+            return uniqueConnections;
         }
 
         public virtual Vertex[] GetNeighbours(Vertex v)
@@ -149,7 +132,7 @@ namespace UCM.IAV.Navegacion
                 if (current.Node == goalNode)
                     break;
 
-                List<Connection> connections = GetConnectionNeighbours(current.Node);
+                HashSet<Connection> connections = GetConnectionNeighbours(current.Node);
 
                 foreach (Connection connection in connections)
                 {
@@ -213,15 +196,12 @@ namespace UCM.IAV.Navegacion
 
         public List<Vertex> Smooth(List<Vertex> inputPath)
         {
-            // IMPLEMENTAR SUAVIZADO DE CAMINOS
-            inputPath.Reverse();
+            // Si el camino es solo de dos nodos de longitud, entonces no se puede suavizar
+            if (inputPath.Count == 2)
+                return inputPath;
 
-            //Si el camino es solo de dos nodos de longitud, entonces no se puede suavizar
-            if (inputPath.Count <= 2) return inputPath;
-
-            //Compilar un camino de salida
-            List<Vertex> outputPath = new List<Vertex>();
-            outputPath.Add(inputPath[0]);
+            // Compilar un camino de salida
+            List<Vertex> outputPath = new List<Vertex>() { inputPath[0] }; // outputPath.Add(inputPath[0]);
 
             //Se hace un seguimiento de la posición en la que se encuentra. Se empieza con dos, ya que se asume que dos nodos adyacentes pasarán el trazado del rayo
             int inputIndex = 2;
@@ -231,23 +211,20 @@ namespace UCM.IAV.Navegacion
             {
                 Vector3 fromPt = outputPath[outputPath.Count - 1].transform.position;
                 Vector3 toPt = inputPath[inputIndex].transform.position;
-
-                RaycastHit hitInfo = new RaycastHit();
-                //Si el trazado de rayo ha fallado, se añade el último nodo al final de la lista de salida.
+                RaycastHit hitInfo;
+                // Si el trazado de rayo ha fallado, se añade el último nodo al final de la lista de salida.
                 if (Physics.SphereCast(fromPt, 2f, toPt - fromPt, out hitInfo, (toPt - fromPt).magnitude))
                 {
                     outputPath.Add(inputPath[inputIndex - 1]);
                 }
-                
-                //Se considera el siguiente nodo.
+
+                // Se considera el siguiente nodo.
                 inputIndex++;
             }
 
-            //Se ha llegado al final del camino de entrada, por lo que se añade el último nodo al de salida y se devuelve
+            // Se ha llegado al final del camino de entrada, por lo que se añade el último nodo al de salida y se devuelve
             outputPath.Add(inputPath[inputPath.Count - 1]);
-            outputPath.Reverse();
             return outputPath;
-
         }
 
         // Reconstruir el camino, dando la vuelta a la lista de nodos 'padres' /previos que hemos ido anotando
@@ -265,6 +242,31 @@ namespace UCM.IAV.Navegacion
                 prev = prevList[prev];
             } while (prev != srcId);
             return path;
+        }
+
+        // Devuelve el coste del camino
+        public float GetPathCost(List<Vertex> path)
+        {
+            float cost = 0;
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                int j = (int)Mathf.Floor(path[i].id / numCols);
+                int k = (int)Mathf.Floor(path[i].id % numCols);
+                cost += costsVertices[j, k];
+            }
+            return cost;
+        }
+
+        // Devuelve el tiempo de búsqueda del camino
+        public float GetPathSearchTime(List<Vertex> path)
+        {
+            return path.Count * Time.deltaTime;
+        }
+
+        // Devuelve el porcentaje del tiempo consumido en la búsqueda del camino
+        public float GetPathSearchTimePercentage(List<Vertex> path)
+        {
+            return GetPathSearchTime(path) / Time.deltaTime;
         }
     }
 }

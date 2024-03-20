@@ -24,7 +24,14 @@ namespace UCM.IAV.Movimiento
         Text heuristicText;
         Text label;
         Text label2;
+        Text smoothText;
+        Text mazeSizeText;
         string mazeSize = "10x10";
+        Text visitedText;
+        Text lengthText;
+        Text costText;
+        Text searchTimeText;
+        Text percentageTimeText;
 
         private int frameRate = 60;
         TheseusGraph theseusGraph;
@@ -121,6 +128,20 @@ namespace UCM.IAV.Movimiento
             {
                 fRText = GameObject.FindGameObjectWithTag("Framerate").GetComponent<Text>();
                 heuristicText = GameObject.FindGameObjectWithTag("Heuristic").GetComponent<Text>();
+                smoothText = GameObject.FindGameObjectWithTag("Smooth").GetComponent<Text>();
+                ChangeSmooth(false); // Inicialmente no suavizamos el camino
+                mazeSizeText = GameObject.FindGameObjectWithTag("Dimensions").GetComponent<Text>();
+                mazeSizeText.text = mazeSize;
+                visitedText = GameObject.FindGameObjectWithTag("Visited").GetComponent<Text>();
+                visitedText.text = "0";
+                lengthText = GameObject.FindGameObjectWithTag("Length").GetComponent<Text>();
+                lengthText.text = "0";
+                costText = GameObject.FindGameObjectWithTag("Cost").GetComponent<Text>();
+                costText.text = "0";
+                searchTimeText = GameObject.FindGameObjectWithTag("Search Time").GetComponent<Text>();
+                searchTimeText.text = "0 ms";
+                percentageTimeText = GameObject.FindGameObjectWithTag("Percentage Time Consumed").GetComponent<Text>();
+                percentageTimeText.text = "0.0 %";
                 theseusGraph = GameObject.FindGameObjectWithTag("TesterGraph").GetComponent<TheseusGraph>();
                 exitSlab = GameObject.FindGameObjectWithTag("Exit");
                 startSlab = GameObject.FindGameObjectWithTag("Start");
@@ -186,13 +207,46 @@ namespace UCM.IAV.Movimiento
             }
         }
 
-        public void ChangeSize()
+        public void ChangeMazeSize()
         {
             mazeSize = label.text;
         }
-        public string getSize()
+        public string getMazeSize()
         {
             return mazeSize;
+        }
+
+        public void ChangeSmooth(bool smooth)
+        {
+            if (smooth)
+                smoothText.text = "On";
+            else
+                smoothText.text = "Off";
+        }
+
+        public void UpdateVisited(int visited)
+        {
+            visitedText.text = visited.ToString();
+        }
+
+        public void UpdateLength(int length)
+        {
+            lengthText.text = length.ToString();
+        }
+
+        public void UpdateCost(float cost)
+        {
+            costText.text = cost.ToString();
+        }
+
+        public void UpdateSearchTime(float time)
+        {
+            searchTimeText.text = (time * 1000.0f).ToString("F0") + " ms";
+        }
+
+        public void UpdateSearchTimePercentage(float percentage)
+        {
+            percentageTimeText.text = percentage.ToString() + " %";
         }
 
         public void UpdatePathCost(Vector3 position, float costMultipliyer)

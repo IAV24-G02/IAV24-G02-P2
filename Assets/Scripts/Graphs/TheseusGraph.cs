@@ -13,10 +13,6 @@ using System;
 
 namespace UCM.IAV.Navegacion
 {
-
-
-    // Posibles algoritmos para buscar caminos en grafos
-    // REALMENTE PARA ESTA PRÁCTICA SÓLO SE NECESITA ASTAR, los otros no los usaremos...
     public enum TesterGraphAlgorithm
     {
         BFS, DFS, ASTAR
@@ -25,38 +21,40 @@ namespace UCM.IAV.Navegacion
     public class TheseusGraph : MonoBehaviour
     {
         [SerializeField]
-        protected Graph graph;                  // Grafo de nodos
+        protected Graph graph;                      // Grafo de nodos
 
         [SerializeField]
-        private TesterGraphAlgorithm algorithm; // Algoritmo a usar
+        private TesterGraphAlgorithm algorithm;     // Algoritmo a usar
 
         [SerializeField]
-        private bool smoothPath;                // Suavizar el camino
+        private GameObject spherePrefab;            // Prefab de esfera
+
+        List<GameObject> pathSpheres;               // Esferas del camino
 
         [SerializeField]
-        private GameObject spherePrefab;        // Prefab de esfera
-
-        List<GameObject> pathSpheres;           // Esferas del camino
+        private Material pathThreadMaterial;        // Material del camino
 
         [SerializeField]
-        private Material pathThreadMaterial;    // Material del camino
-
-        [SerializeField]
-        private Color pathColor;                // Color del camino
+        private Color pathColor;                    // Color del camino
 
         [SerializeField]
         [Range(0.1f, 1f)]
-        private float pathNodeRadius = .3f;     // Radio de los nodos del camino
+        private float pathNodeRadius = .3f;         // Radio de los nodos del camino
 
-        private bool ariadna;                   // Activa o desactiva el hilo de Ariadna
+        private bool ariadna;                       // Activa o desactiva el hilo de Ariadna
+        private bool smoothPath;                    // Suavizar el camino
+        private bool firstHeuristic;                // Indica si se está usando la primera heurística
+        protected GameObject srcObj;                // Objeto origen
+        protected GameObject dstObj;                // Objeto destino
+        protected List<Vertex> path;                // Camino calculado
+        private int pathVisited;                    // Nodos visitados
+        private int pathLength;                     // Longitud del camino
+        private float pathCost;                     // Coste del camino
+        private float pathSearchTime;               // Tiempo de búsqueda
+        private float pathPercentageTimeConsumed;   // Porcentaje de tiempo consumido en la búsqueda
 
-        bool firstHeuristic = true;             // Indica si se está usando la primera heurística
-        protected GameObject srcObj;            // Objeto origen
-        protected GameObject dstObj;            // Objeto destino
-        protected List<Vertex> path;            // Camino calculado
-
-        protected LineRenderer hilo;            // Hilo de Ariadna
-        protected float hiloOffset = 0.2f;      // Offset del hilo
+        protected LineRenderer hilo;                // Hilo de Ariadna
+        protected float hiloOffset = 0.2f;          // Offset del hilo
 
         public virtual void Awake()
         {
@@ -65,6 +63,13 @@ namespace UCM.IAV.Navegacion
             path = null;
             hilo = GetComponent<LineRenderer>();
             ariadna = false;
+            smoothPath = false;
+            firstHeuristic = true;
+            pathVisited = 0;
+            pathLength = 0;
+            pathCost = 0;
+            pathSearchTime = 0;
+            pathPercentageTimeConsumed = 0;
 
             hilo.startWidth = 0.15f;
             hilo.endWidth = 0.15f;
@@ -80,7 +85,9 @@ namespace UCM.IAV.Navegacion
             }
 
             if (Input.GetKeyDown(KeyCode.T))
-                smoothPath = !smoothPath;
+            {
+                updateSmooth(!smoothPath);
+            }
 
             if (ariadna)
             {
@@ -107,18 +114,110 @@ namespace UCM.IAV.Navegacion
 
                 if (path != null && path.Count > 0)
                 {
+                    UpdatePathInfo();
                     DrawThread();
                     DrawSpheres();
                 }
             }
         }
 
+        // Devuelve el siguiente nodo del camino
         public virtual Transform GetNextNode()
         {
-            if (path != null && path.Count > 0)
-                return path[path.Count - 1].transform;
+            if (path != null && path.Count > 1)
+                return path[1].transform;
+            else if (path != null && path.Count == 1)
+                return path[0].transform;
 
             return null;
+        }
+
+        private void UpdatePathInfo()
+        {
+            if (pathLength == 0)
+            {
+                pathLength = path.Count - 1;
+                GameManager.instance.UpdateLength(pathLength);
+            }
+            pathVisited = pathLength - path.Count + 1;
+            GameManager.instance.UpdateVisited(pathVisited);
+            if (pathCost == 0)
+            {
+                pathCost = graph.GetPathCost(path);
+                GameManager.instance.UpdateCost(pathCost);
+            }
+            if (pathSearchTime == 0)
+            {
+                pathSearchTime = graph.GetPathSearchTime(path);
+                GameManager.instance.UpdateSearchTime(pathSearchTime);
+            }
+            if (pathPercentageTimeConsumed == 0)
+            {
+                pathPercentageTimeConsumed = graph.GetPathSearchTimePercentage(path);
+                GameManager.instance.UpdateSearchTimePercentage(pathPercentageTimeConsumed);
+            }
+        }
+
+        // Dibuja el hilo de Ariadna
+        public virtual void DrawThread()
+        {
+            hilo.positionCount = path.Count;
+
+            Vector3 vertexInitialPos = new Vector3(srcObj.transform.position.x, srcObj.transform.position.y + hiloOffset, srcObj.transform.position.z);
+            hilo.SetPosition(0, vertexInitialPos);
+
+            for (int i = 1; i < path.Count; i++)
+            {
+                Vector3 vertexPos = new Vector3(path[i].transform.position.x,
+                    path[i].transform.position.y + hiloOffset, path[i].transform.position.z);
+                hilo.SetPosition(i, vertexPos);
+                pathThreadMaterial.EnableKeyword("_EMISSION");
+                pathThreadMaterial.SetColor("_EmissionColor", pathColor);
+            }
+        }
+
+        // Dibujar esferas en el camino
+        public void DrawSpheres()
+        {
+            if (spherePrefab == null)
+                return;
+
+            RemoveSpheres();
+
+            foreach (Vertex pathVertex in path)
+            {
+                GameObject pathSphere = Instantiate(spherePrefab, pathVertex.transform.position, Quaternion.identity);
+                pathSphere.transform.localScale = Vector3.one * pathNodeRadius;
+
+                Renderer sphereRenderer = pathSphere.GetComponent<Renderer>();
+                if (sphereRenderer != null) sphereRenderer.material.color = pathColor;
+                else Debug.LogWarning("No se encontró componente Renderer en el prefab de la esfera");
+
+                pathSpheres.Add(pathSphere);
+            }
+        }
+
+        // Eliminar esferas del camino
+        public void RemoveSpheres()
+        {
+            foreach (GameObject go in pathSpheres)
+            {
+                Destroy(go);
+            }
+            pathSpheres.Clear();
+        }
+
+        // Mostrar el camino calculado
+        public void ShowPathVertices(List<Vertex> path, Color color)
+        {
+            for (int i = 0; i < path.Count; i++)
+            {
+                Vertex v = path[i];
+                Renderer r = v.GetComponent<Renderer>();
+                if (ReferenceEquals(r, null))
+                    continue;
+                r.material.color = color;
+            }
         }
 
         // Dibujado de esferas y líneas en el editor
@@ -157,95 +256,57 @@ namespace UCM.IAV.Navegacion
             }
         }
 
-        public void DrawSpheres()
-        {
-            if (spherePrefab == null)
-                return;
-
-            RemoveSpheres();
-
-            foreach (Vertex pathVertex in path)
-            {
-                GameObject pathSphere = Instantiate(spherePrefab, pathVertex.transform.position, Quaternion.identity);
-                pathSphere.transform.localScale = Vector3.one * pathNodeRadius;
-
-                Renderer sphereRenderer = pathSphere.GetComponent<Renderer>();
-                if (sphereRenderer != null) sphereRenderer.material.color = pathColor;
-                else Debug.LogWarning("No se encontró componente Renderer en el prefab de la esfera");
-                
-                pathSpheres.Add(pathSphere);
-            }
-        }
-
-        public void RemoveSpheres()
-        {
-            foreach (GameObject go in pathSpheres)
-            {
-                Destroy(go);
-            }
-            pathSpheres.Clear();
-        }
-
-        // Mostrar el camino calculado
-        public void ShowPathVertices(List<Vertex> path, Color color)
-        {
-            int i;
-            for (i = 0; i < path.Count; i++)
-            {
-                Vertex v = path[i];
-                Renderer r = v.GetComponent<Renderer>();
-                if (ReferenceEquals(r, null))
-                    continue;
-                r.material.color = color;
-            }
-        }
-
-        // Dibuja el hilo de Ariadna
-        public virtual void DrawThread()
-        {
-            hilo.positionCount = path.Count + 1;
-            hilo.SetPosition(0, new Vector3(srcObj.transform.position.x, srcObj.transform.position.y + hiloOffset, srcObj.transform.position.z));
-
-            for (int i = path.Count - 1; i >= 0; i--)
-            {
-                Vector3 vertexPos = new Vector3(path[i].transform.position.x, path[i].transform.position.y + hiloOffset, path[i].transform.position.z);
-                hilo.SetPosition(path.Count - i, vertexPos);
-                pathThreadMaterial.EnableKeyword("_EMISSION");
-                pathThreadMaterial.SetColor("_EmissionColor", pathColor);
-            }
-        }
-
+        // Actualiza el hilo de Ariadna, activando o desactivando el hilo y quitando las esferas
         void updateAriadna(bool ar)
         {
             ariadna = ar;
             hilo.enabled = ariadna;
             if (!ariadna)
             {
+                pathVisited = 0;
+                pathLength = 0;
+                pathCost = 0;
+                pathSearchTime = 0;
+                GameManager.instance.UpdateVisited(0);
+                GameManager.instance.UpdateLength(0);
+                GameManager.instance.UpdateCost(0);
+                GameManager.instance.UpdateSearchTime(0);
                 RemoveSpheres();
             }
         }
 
-        public string ChangeHeuristic()
-        {
-            firstHeuristic = !firstHeuristic;
-            return firstHeuristic ? "Euclidea" : "Manhattan";
-        }
-
+        // Reinicia el camino
         public virtual void ResetPath()
         {
             path = null;
         }
 
+        // Actualiza el coste de una celda
         public void UpdatePathCost(Vector3 position, float costMultipliyer)
         {
             graph.UpdateVertexCost(position, costMultipliyer);
         }
 
-        // Heurísticas
+        void updateSmooth(bool smooth)
+        {
+            smoothPath = smooth;
+            GameManager.instance.ChangeSmooth(smoothPath);
+        }
+
+        // Cambia la heurística entre Euclidea y Manhattan
+        public string ChangeHeuristic()
+        {
+            firstHeuristic = !firstHeuristic;
+            return firstHeuristic ? "Euclidean" : "Manhattan";
+        }
+
+        // Heurística Euclidea
         public float Euclidean(Vertex a, Vertex b)
         {
             return Vector3.Distance(a.transform.position, b.transform.position);
         }
+
+        // Heurística Manhattan
         public float Manhattan(Vertex a, Vertex b)
         {
             Vector2 posA = a.transform.position;
