@@ -259,8 +259,8 @@ function smoothPath(inputPath: Vector[]) -> Vector[]:
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica D** | | |
-| Comprobar que el suavizado de A* se activa/desactiva al usar la opción de la interfaz, y el camino cambia. | Cambio de suavizado mediante la opicón de la interfaz. | [SUAVIZADO INTERFAZ](https://drive.google.com/file/d/1jKAt8q7MuYNHtuMveOOtBdEN8WfGlBrW/view?usp=drive_link) |
-| Comprobar si el suavizado se realiza correctamente con las diversas heurísticas. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | [DISTINTOS MAPAS](https://drive.google.com/file/d/1jKAt8q7MuYNHtuMveOOtBdEN8WfGlBrW/view?usp=drive_link) |
+| Comprobar que el suavizado de A* se activa/desactiva al usar la opción de la interfaz, y el camino cambia. | Cambio de suavizado mediante la opicón de la interfaz. | [SUAVIZADO INTERFAZ](https://drive.google.com/file/d/1Rs9qw0BKmlXU7kXSELcKZLcQhK0vRimp/view?usp=drive_link) |
+| Comprobar si el suavizado se realiza correctamente con las diversas heurísticas. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | [DISTINTOS MAPAS](https://drive.google.com/file/d/1L2RtdqQLwM6m-jgnZ6g-iSkRYbAppLdx/view?usp=drive_link) |
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
