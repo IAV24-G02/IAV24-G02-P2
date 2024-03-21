@@ -285,8 +285,8 @@ function smoothPath(inputPath: Vector[]) -> Vector[]:
             # de la lista de salida
             outputPath += inputPath[inputIndex - 1]
 
-    # Se considera el siguiente nodo
-    inputIndex ++
+            # Se considera el siguiente nodo
+            inputIndex ++
 
     # Se ha llegado al final del camino de entrada, por lo que se añade el último
     # nodo al de salida y se devuelve
