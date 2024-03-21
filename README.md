@@ -259,15 +259,17 @@ function smoothPath(inputPath: Vector[]) -> Vector[]:
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica D** | | |
-| Comprobar que el suavizado de A* se activa/desactiva al usar la opción de la interfaz, y el camino cambia. | Cambio de suavizado mediante la opicón de la interfaz. | [SUAVIZADO INTERFAZ](https://drive.google.com/file/d/1jKAt8q7MuYNHtuMveOOtBdEN8WfGlBrW/view?usp=drive_link) |
-| Comprobar si el suavizado se realiza correctamente con las diversas heurísticas. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | [DISTINTOS MAPAS](https://drive.google.com/file/d/1jKAt8q7MuYNHtuMveOOtBdEN8WfGlBrW/view?usp=drive_link) |
+| Comprobar que el suavizado de A* se activa/desactiva al usar la opción de la interfaz, y el camino cambia. | Cambio de suavizado mediante la opción de la interfaz. | [SUAVIZADO INTERFAZ](https://drive.google.com/file/d/1i26BveJnQS7Ab6RHiwu06IYGaT8pzdLu/view?usp=sharing) |
+| Comprobar si el suavizado se realiza correctamente con las diversas heurísticas. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Euclídea, Manhattan. | [PRUEBAS SUAVIZADO](https://drive.google.com/file/d/14XkSvY2d8M76zwkzdEEnwmZ3rM6g0ipo/view?usp=sharing) |
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica E** | | |
-| Comprobar que se desactive parte del hilo y esferas por las zonas según el `Teseo` va navegando automáticamente y cuando se desactiva la navegación automática.| - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | [ARIADNA](https://drive.google.com/file/d/1BP72W27eE55rpuz1eSdx0s5N6PxH-VGZ/view?usp=sharing) |
-| Comprobar que desaparece y aparece de forma correcta el hilo activando y desactivando repetidas veces la navegación automática y retrocediendo al punto de partida manualmente. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | [ARIADNA REPETIDAMENTE](https://drive.google.com/file/d/1E-kBHf0Kohm11gpHut5OWXPePT9d9sYM/view?usp=sharing) |
+| Comprobar que se desactive parte del hilo y esferas por las zonas según el `Teseo` va navegando automáticamente y cuando se desactiva la navegación automática.| - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Euclídea, Manhattan. | [ARIADNA](https://drive.google.com/file/d/1BP72W27eE55rpuz1eSdx0s5N6PxH-VGZ/view?usp=sharing) |
+| Comprobar que desaparece y aparece de forma correcta el hilo activando y desactivando repetidas veces la navegación automática y retrocediendo al punto de partida manualmente. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Euclídea, Manhattan. | [ARIADNA REPETIDAMENTE](https://drive.google.com/file/d/1E-kBHf0Kohm11gpHut5OWXPePT9d9sYM/view?usp=sharing) |
 
+[ENLACE AL VÍDEO COMPLETO EN YOUTUBE](https://youtu.be/HiFzOaBqYOA)
+[ENLACE AL VÍDEO COMPLETO EN DRIVE](https://drive.google.com/file/d/1vj8YB-8zr6-Dj9EtuF70ptZylaU4BZPp/view?usp=sharing)
 ## Ampliaciones
 
 - Se muestran visualmente las zonas de percepción visual y auditiva de todos los minotauros representados con una esfera alrededor de los minotauros y un cono que representa el cono de visión de los minotauros.
