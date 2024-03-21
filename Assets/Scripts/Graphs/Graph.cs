@@ -204,7 +204,7 @@ namespace UCM.IAV.Navegacion
                         if (endNode.CostSoFar <= endNodeCost)
                             continue;
 
-                        endNodeHeuristic = endNode.EstimatedTotalCost - endNode.CostSoFar;
+                        endNodeHeuristic = endNode.Cost - endNode.CostSoFar;
                     }
                     else
                         endNodeHeuristic = heuristic(endNode, goal);

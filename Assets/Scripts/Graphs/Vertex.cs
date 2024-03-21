@@ -25,7 +25,7 @@ namespace UCM.IAV.Navegacion
         public int id { get; set; }
 
         /// <summary>
-        /// Identificador del nodo
+        /// Identificador del nodo anterior
         /// </summary>
         public int PreviousId { get; set; }
 
@@ -35,12 +35,12 @@ namespace UCM.IAV.Navegacion
         public float Cost { get; set; }
 
         /// <summary>
-        /// Coste acumulado hasta el nodo seleccionado
+        /// Coste acumulado hasta el nodo
         /// </summary>
         public float CostSoFar { get; set; }
 
         /// <summary>
-        /// Coste total estimado hasta el nodo seleccionado
+        /// Coste total estimado hasta el nodo
         /// </summary>
         public float EstimatedTotalCost { get; set; }
 
