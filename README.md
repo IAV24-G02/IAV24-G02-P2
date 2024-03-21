@@ -242,19 +242,19 @@ function smoothPath(inputPath: Vector[]) -> Vector[]:
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica A** | | |
-| Comprobar que funcione la navegación del `Teseo` con el clic izquierdo | - | _link no disponible_ |
+| Comprobar que funcione la navegación del `Teseo` con el clic izquierdo | - | [MOVIMIENTO](https://drive.google.com/file/d/12TAMhU3OP-bBdbMAnVh1SWoZj0bHm-g6/view?usp=sharing) |
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica B** | | |
-| Comprobar que la detección del jugador mediante la vista del `Minotauro` funciona correctamente, solo detecta cuando el jugador entra dentro del cono de visión y no hay muros de por medio. | - Mapa de 10x10 <br> - Un mapa en el que el `Minotauro`y el `Teseo` estan separados por un muro impenetrable. <br> - Un mapa en el que no hay obstáculos a excepción de uno en el medio y el jugador debe entrar y salir del cono de visión. | _link no disponible_ |
-| Comprobar que el `Minotauro` detecta al `Teseo` cuando entran en su rango de detección por sonido. | - Desactivación de la detección por visión. <br> - Un mapa en el que solo haya una pared alrededor de la cuál el jugador puede probar la audición del `Minotauro` | _link no disponible_ |  
+| Comprobar que la detección del jugador mediante la vista del `Minotauro` funciona correctamente, solo detecta cuando el jugador entra dentro del cono de visión y no hay muros de por medio. | - Mapa de 10x10 <br> - Un mapa en el que el `Minotauro`y el `Teseo` estan separados por un muro impenetrable. <br> - Un mapa en el que no hay obstáculos a excepción de uno en el medio y el jugador debe entrar y salir del cono de visión. | [DETECCIÓN VISTA](https://drive.google.com/file/d/1yjne_gPnRA5pM24ZW6FfbKC4LbddWreM/view?usp=sharing) |
+| Comprobar que el `Minotauro` detecta al `Teseo` cuando entran en su rango de detección por sonido. | - Desactivación de la detección por visión. <br> - Un mapa en el que solo haya una pared alrededor de la cuál el jugador puede probar la audición del `Minotauro` | [DETECCIÓN OÍDO](https://drive.google.com/file/d/1kbypJ9AABAl0-OOR0HZDHgcnpvvsCdEw/view?usp=sharing) |  
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica C** | | |
-| Comprobar el cambio de representación del hilo y de movimiento del `Teseo` con la implicación de un `Minotauro` estático | - Mapa en el que haya dos caminos de igual coste pero siempre elige el que no incluya al `Minotauro` en medio  | _link no disponible_ |
-| Comprobar el cambio de representación del hilo y de movimiento del `Teseo` con la implicación de uno o varios `Minotauros` en movimiento | - | _link no disponible_ |
+| Comprobar el cambio de representación del hilo y de movimiento del `Teseo` con la implicación de un `Minotauro` estático | - Mapa en el que haya dos caminos de igual coste pero siempre elige el que no incluya al `Minotauro` en medio  | [UN MINOTAURO](https://drive.google.com/file/d/1XJoTXgNrIlESjEo2dIhWiPdkuWuX2LAH/view?usp=sharing) |
+| Comprobar el cambio de representación del hilo y de movimiento del `Teseo` con la implicación de uno o varios `Minotauros` en movimiento | - | [VARIOS MINOTAUROS](https://drive.google.com/file/d/1nuSeHpZmtHwazfHJc5SkJKftI4GhISVt/view?usp=sharing) |
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
@@ -265,8 +265,8 @@ function smoothPath(inputPath: Vector[]) -> Vector[]:
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica E** | | |
-| Comprobar que se desactive parte del hilo y esferas por las zonas según el `Teseo` va navegando automáticamente y cuando se desactiva la navegación automática.| - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
-| Comprobar que desaparece y aparece de forma correcta el hilo activando y desactivando repetidas veces la navegación automática y retrocediendo al punto de partida manualmente. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
+| Comprobar que se desactive parte del hilo y esferas por las zonas según el `Teseo` va navegando automáticamente y cuando se desactiva la navegación automática.| - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | [ARIADNA](https://drive.google.com/file/d/1BP72W27eE55rpuz1eSdx0s5N6PxH-VGZ/view?usp=sharing) |
+| Comprobar que desaparece y aparece de forma correcta el hilo activando y desactivando repetidas veces la navegación automática y retrocediendo al punto de partida manualmente. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | [ARIADNA REPETIDAMENTE](https://drive.google.com/file/d/1E-kBHf0Kohm11gpHut5OWXPePT9d9sYM/view?usp=sharing) |
 
 ## Ampliaciones
 
@@ -374,3 +374,4 @@ Los recursos de terceros utilizados son de uso público.
 https://github.com/PacktPublishing/Unity-2018-Artificial-Intelligence-Cookbook-Second-Edition 
 - Unity Artificial Intelligence Programming, 5th Edition (Repositorio)
 https://github.com/PacktPublishing/Unity-Artificial-Intelligence-Programming-Fifth-Edition : Unity Artificial Intelligence Programming – Fifth Edition, published by Packt (github.com)
+
