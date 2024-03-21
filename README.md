@@ -305,8 +305,8 @@ function smoothPath(inputPath: Vector[]) -> Vector[]:
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica B** | | |
-| Comprobar que al configurar más minotauros el merodeo sigue funcionando. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Diversos números de minotauros. | _link no disponible_ |
-| Comprobar que los distintos minotauros detectan al `Avatar` cuando entran en su rango de detección y le persiguen. | Diversos números de minotauros. | _link no disponible_ |  
+| Comprobar que la detección del jugador mediante la vista del minotauro funciona correctamente, solo detecta cuando el jugador entra dentro del cono de visión y no hay muros de por medio. | - Mapa de 10x10 <br> - Un mapa en el que el `Minotauro`y el `Avatar` estan separados por un muro impenetrable. <br> - Un mapa en el que no hay obstáculos a excepción de uno en el medio y el jugador debe entrar y salir del cono de visión. | _link no disponible_ |
+| Comprobar que el `Minotauro` detecta al `Avatar` cuando entran en su rango de detección por sonido. | - Desactivación de la detección por visión. <br> - Un mapa en el que solo haya una pared alrededor de la cuál el jugador puede probar la audición del `Minotauro` | _link no disponible_ |  
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
@@ -323,12 +323,12 @@ function smoothPath(inputPath: Vector[]) -> Vector[]:
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica E** | | |
-| Comprobar que se desactive parte del hilo y esferas por las zonas según el `Avatar` va navegando automáticamente | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
-| Comprobar que se desactive el hilo y las esferas cuando se navega manualmente | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
+| Comprobar que se desactive parte del hilo y esferas por las zonas según el `Avatar` va navegando automáticamente y cuando se desactiva la navegación automática.| - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
+| Comprobar que desaparece y aparece de forma correcta el hilo activando y desactivando repetidas veces la navegación automática y retrocediendo al punto de partida manualmente. | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Primera, Segunda, etc. | _link no disponible_ |
 
 ## Ampliaciones
 
-No se han realizado ampliaciones hasta el momento.
+Se muestran visualmente las zonas de percepción visual y auditiva de todos los minotauros representados con una esfera alrededor de los minotauros y un cono que representa el cono de visión de lo sminotauros.
 
 ## Producción
 
