@@ -242,7 +242,7 @@ function smoothPath(inputPath: Vector[]) -> Vector[]:
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica A** | | |
-| Comprobar que funcione la navegación del `Teseo` con el clic izquierdo | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 | _link no disponible_ |
+| Comprobar que funcione la navegación del `Teseo` con el clic izquierdo | - | _link no disponible_ |
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
@@ -253,9 +253,8 @@ function smoothPath(inputPath: Vector[]) -> Vector[]:
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
 | **Característica C** | | |
-| Comprobar que se activa el pintado de la línea blanca (hilo) y esferas blancas durante la navegación con el clic derecho | - Distintos tamaños de mapa: 10x10, 20x20, 30x30 <br> - Cambio de heurística: Euclídea, Manhattan | _link no disponible_ |
 | Comprobar el cambio de representación del hilo y de movimiento del `Teseo` con la implicación de un `Minotauro` estático | - Mapa en el que haya dos caminos de igual coste pero siempre elige el que no incluya al `Minotauro` en medio  | _link no disponible_ |
-| Comprobar el cambio de representación del hilo y de movimiento del `Teseo` con la implicación de uno o varios `Minotauros` en movimiento | - Mapa vacío <br> - Mapa con obstáculos | _link no disponible_ |
+| Comprobar el cambio de representación del hilo y de movimiento del `Teseo` con la implicación de uno o varios `Minotauros` en movimiento | - | _link no disponible_ |
 
 | Pruebas | Métricas | Links |
 |:-:|:-:|:-:|
