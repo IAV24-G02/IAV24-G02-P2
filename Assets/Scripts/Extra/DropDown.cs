@@ -9,16 +9,23 @@
 using UnityEngine.UI;
 using UnityEngine;
 
+/// <summary>
+/// Clase para controlar el comportamiento de los dropdowns
+/// </summary>
 public class DropDown : MonoBehaviour
 {
-    public bool mino = false;
+    /// <summary>
+    /// Si es un dropdown de minos
+    /// </summary>
+    [SerializeField]
+    private bool mino = false;
+
     void Start()
     {
-       // Establece changeSize al OnValueChanged del Dropdown
-        if(!mino)
+        // Establece changeSize al OnValueChanged del Dropdown
+        if (!mino)
             gameObject.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { UCM.IAV.Movimiento.GameManager.instance.ChangeMazeSize(); });
-       else
+        else
             gameObject.GetComponent<Dropdown>().onValueChanged.AddListener(delegate { UCM.IAV.Movimiento.GameManager.instance.setNumMinos(); });
-
     }
 }

@@ -19,32 +19,73 @@ namespace UCM.IAV.Navegacion
     /// </summary>
     public class GraphGrid : Graph
     {
+        #region Variables
+        /// <summary>
+        /// Número máximo de intentos para encontrar una posición aleatoria
+        /// </summary>
         const int MAX_TRIES = 1000;
 
+        /// <summary>
+        /// Prefabs de paredes
+        /// </summary>
         public GameObject wallPrefab1;
         public GameObject wallPrefab2;
         public GameObject wallPrefab3;
 
+        /// <summary>
+        /// Prefabs de intersecciones
+        /// </summary>
         public GameObject intersection3Prefab;
         public GameObject intersection4Prefab;
         public GameObject turnPrefab;
 
+        /// <summary>
+        /// Prefab de final
+        /// </summary>
         public GameObject endPrefab;
+
+        /// <summary>
+        /// Prefab de columna
+        /// </summary>
         public GameObject pillarPrefab;
 
+        /// <summary>
+        /// Prefab de obstáculo
+        /// </summary>
         public GameObject obstaclePrefab;
 
-        public string mapsDir = "Maps"; // Directorio por defecto
-        public string mapName = "10x10.map"; // Fichero por defecto
-        public bool get8Vicinity = false;
+        /// <summary>
+        /// Directorio por defecto de los mapas
+        /// </summary>
+        public string mapsDir = "Maps";
+
+        /// <summary>
+        /// Nombre de fichero por defecto de mapa
+        /// </summary>
+        public string mapName = "10x10.map";
+
+        /// <summary>
+        /// Tamaño de baldosa
+        /// </summary>
         public float cellSize = 1f;
 
+        /// <summary>
+        /// Coste por defecto de las baldosas
+        /// </summary>
         [Range(0, Mathf.Infinity)]
         public float defaultCost = 1f;
+
+        /// <summary>
+        /// Coste máximo 
+        /// </summary>
         [Range(0, Mathf.Infinity)]
         public float maximumCost = Mathf.Infinity;
 
-        GameObject[] vertexObjs;
+        /// <summary>
+        /// Objetos de las baldosas
+        /// </summary>
+        private GameObject[] vertexObjs;
+        #endregion
 
         private void Awake()
         {
@@ -111,7 +152,7 @@ namespace UCM.IAV.Navegacion
                         }
                     }
 
-                    //Generamos terreno
+                    // Generamos terreno
                     for (i = 0; i < numRows; i++)
                     {
                         for (j = 0; j < numCols; j++)
@@ -258,19 +299,6 @@ namespace UCM.IAV.Navegacion
 
         public override void UpdateVertexCost(Vector3 position, float costMultiplier)
         {
-            //Debug.Log("ANTES");
-            //string a = "";
-            //for (int i = 0; i < numRows; i++)
-            //{
-            //    for (int j = 0; j < numCols; j++)
-            //    {
-            //        a += costsVertices[i, j] + " ";
-            //    }
-            //    a += "\n";
-            //}
-            //Debug.Log(a);
-            //Debug.Log("=====================================");
-
             Vertex v = GetNearestVertex(position);
             Vector2 gridPos = IdToGrid(v.id);
 
@@ -288,29 +316,16 @@ namespace UCM.IAV.Navegacion
 
                 neighbor.Cost = costsVertices[neighborX, neighborY];
             }
-
-            //Debug.Log("DESPUES");
-            //string b = "";
-            //for (int i = 0; i < numRows; i++)
-            //{
-            //    for (int j = 0; j < numCols; j++)
-            //    {
-            //        b += costsVertices[i, j] + " ";
-            //    }
-            //    b += "\n";
-            //}
-            //Debug.Log(a);
-            //Debug.Log("=====================================");
         }
 
         private GameObject WallInstantiate(Vector3 position, int i, int j)
         {
-            //Suelo base e independiente
+            // Suelo base e independiente
             GameObject floor = Instantiate(vertexPrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
             floor.transform.localScale *= cellSize;
             floor.name = floor.name.Replace("(Clone)", GridToId(j, i).ToString());
 
-            //Derecha, Izquierda, Arriba, Abajo
+            // Derecha, Izquierda, Arriba, Abajo
             bool[] dirs = new bool[4] { i < numRows - 1 && !mapVertices[i+1, j],
                                         i > 0 && !mapVertices[i - 1, j],
                                         j < numCols - 1 && !mapVertices[i, j + 1],
@@ -320,11 +335,11 @@ namespace UCM.IAV.Navegacion
             for (int index = 0; index < dirs.Length; index++)
                 if (dirs[index]) connec++;
 
-            //Interseccion en 4
+            // Interseccion en 4
             if (dirs[0] && dirs[1] && dirs[2] && dirs[3])
                 return Instantiate(intersection4Prefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
 
-            //Interseccion en 3
+            // Interseccion en 3
             if (dirs[0] && dirs[1] && dirs[2])
                 return Instantiate(intersection3Prefab, position, Quaternion.Euler(0, 90, 0), this.gameObject.transform) as GameObject;
             if (dirs[0] && dirs[1] && dirs[3])
@@ -334,13 +349,13 @@ namespace UCM.IAV.Navegacion
             if (dirs[1] && dirs[2] && dirs[3])
                 return Instantiate(intersection3Prefab, position, Quaternion.Euler(0, 180, 0), this.gameObject.transform) as GameObject;
 
-            //Interseccion muro
+            // Interseccion muro
             if (dirs[0] && dirs[1])
                 return Instantiate(wallPrefab1, position, Quaternion.Euler(0, 90, 0), this.gameObject.transform) as GameObject;
             if (dirs[2] && dirs[3])
                 return Instantiate(wallPrefab1, position, Quaternion.identity, this.gameObject.transform) as GameObject;
 
-            //Interseccion en giro
+            // Interseccion en giro
             if (dirs[0] && dirs[2])
                 return Instantiate(turnPrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
             if (dirs[0] && dirs[3])
@@ -350,11 +365,11 @@ namespace UCM.IAV.Navegacion
             if (dirs[1] && dirs[3])
                 return Instantiate(turnPrefab, position, Quaternion.Euler(0, 180, 0), this.gameObject.transform) as GameObject;
 
-            //Muro libre
+            // Muro libre
             if (!dirs[0] && !dirs[1] && !dirs[2] && !dirs[3])
                 return Instantiate(pillarPrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
 
-            //Laterales
+            // Laterales
             if (dirs[0])
                 return Instantiate(endPrefab, position, Quaternion.Euler(0, 90, 0), this.gameObject.transform) as GameObject;
             if (dirs[1])

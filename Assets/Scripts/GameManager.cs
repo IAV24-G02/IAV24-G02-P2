@@ -18,38 +18,115 @@ namespace UCM.IAV.Movimiento
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-        public static GameManager instance = null;  // Singleton
+        #region Variables
+        /// <summary>
+        /// Singleton
+        /// </summary>
+        public static GameManager instance = null;
 
-        private string mazeSize = "10x10";          // Tamaño del laberinto
-        private int frameRate = 60;                 // Framerate
-        private TheseusGraph theseusGraph;          // Grafo del laberinto
-        private int numMinos = 1;                   // Número de minotauros
+        /// <summary>
+        /// Tamaño del laberinto
+        /// </summary>
+        private string mazeSize = "10x10";
 
-        private GameObject mino;                    // Objeto Gestor de minotauros
-        private MinoManager minoManager;            // Gestor de minotauros
-        private GameObject player = null;           // Jugador
-        private GameObject startSlab = null;        // Baldosa de inicio
-        private GameObject exitSlab = null;         // Baldosa de salida
-        private GameObject exit = null;             // Nodo de salida
+        /// <summary>
+        /// Framerate
+        /// </summary>
+        private int frameRate = 60;
 
-        // Textos UI
-        private Text fRText;                        // Texto de framerate
-        private Text heuristicText;                 // Texto de la heurística
-        private Text label;                         // Texto del tamaño del laberinto en el menú
-        private Text label2;                        // Texto del número de minotauros en el menú
-        private Text smoothText;                    // Texto de suavizado del camino
-        private Text mazeSizeText;                  // Texto del tamaño del laberinto en el laberinto
-        private Text visitedText;                   // Texto de baldosas visitadas
-        private Text lengthText;                    // Texto de longitud del camino
-        private Text costText;                      // Texto de coste del camino
-        private Text searchTimeText;                // Texto de tiempo de búsqueda
-        private Text percentageTimeText;            // Texto de porcentaje de tiempo de búsqueda
+        /// <summary>
+        /// Grafo del laberinto
+        /// </summary>
+        private TheseusGraph theseusGraph;
 
-        // Variables de timer de framerate
+        /// <summary>
+        /// Número de minotauros
+        /// </summary>
+        private int numMinos = 1;
+
+        /// <summary>
+        /// Jugador
+        /// </summary>
+        private GameObject player = null;
+
+        /// <summary>
+        /// Baldosa de inicio
+        /// </summary>
+        private GameObject startSlab = null;
+
+        /// <summary>
+        /// Baldosa de salida
+        /// </summary>
+        private GameObject exitSlab = null;
+
+        /// <summary>
+        /// Nodo de salida
+        /// </summary>
+        private GameObject exit = null;
+
+        /// <summary>
+        /// Texto de framerate
+        /// </summary>
+        private Text fRText;
+
+        /// <summary>
+        /// Texto de la heurística
+        /// </summary>
+        private Text heuristicText;
+
+        /// <summary>
+        /// Texto del tamaño del laberinto en el menú
+        /// </summary>
+        private Text label;
+
+        /// <summary>
+        /// Texto del número de minotauros en el menú
+        /// </summary>
+        private Text label2;
+
+        /// <summary>
+        /// Texto de suavizado del camino
+        /// </summary>
+        private Text smoothText;
+
+        /// <summary>
+        /// Texto del tamaño del laberinto en el laberinto
+        /// </summary>
+        private Text mazeSizeText;
+
+        /// <summary>
+        /// Texto de baldosas visitadas
+        /// </summary>
+        private Text visitedText;
+
+        /// <summary>
+        /// Texto de longitud del camino
+        /// </summary>
+        private Text lengthText;
+
+        /// <summary>
+        /// Texto de coste del camino
+        /// </summary>
+        private Text costText;
+
+        /// <summary>
+        /// Texto de tiempo de búsqueda
+        /// </summary>
+        private Text searchTimeText;
+
+        /// <summary>
+        /// Texto de porcentaje de tiempo de búsqueda
+        /// </summary>
+        private Text percentageTimeText;
+
+        /// <summary>
+        /// Variables de timer de framerate
+        /// </summary>
         private int m_frameCounter = 0;
         private float m_timeCounter = 0.0f;
         private float m_lastFramerate = 0.0f;
         private float m_refreshTime = 0.5f;
+        #endregion
 
         private void Awake()
         {
@@ -116,7 +193,9 @@ namespace UCM.IAV.Movimiento
                 heuristicText.text = theseusGraph.ChangeHeuristic();
         }
 
-        // Encuentra los GameObjects, los asigna y los inicializa
+        /// <summary>
+        /// Encuentra los GameObjects, los asigna y los inicializa
+        /// </summary>
         private void FindGO()
         {
             if (SceneManager.GetActiveScene().name == "Menu")
@@ -142,9 +221,6 @@ namespace UCM.IAV.Movimiento
                 searchTimeText.text = "0 ms";
                 percentageTimeText = GameObject.FindGameObjectWithTag("Percentage Time Consumed").GetComponent<Text>();
                 percentageTimeText.text = "0.0 %";
-                mino = GameObject.FindGameObjectWithTag("MinoManager");
-                if (mino != null) minoManager = mino.GetComponent<MinoManager>();
-                else minoManager = null;
                 theseusGraph = GameObject.FindGameObjectWithTag("TesterGraph").GetComponent<TheseusGraph>();
                 exitSlab = GameObject.FindGameObjectWithTag("Exit");
                 startSlab = GameObject.FindGameObjectWithTag("Start");
@@ -152,24 +228,27 @@ namespace UCM.IAV.Movimiento
             }
         }
 
-        // Cambia la escena
+        /// <summary>
+        /// Cambia la escena
+        /// </summary>
+        /// <param name="scene"></param>
         public void goToScene(string scene)
         {
             SceneManager.LoadScene(scene);
         }
 
-        // Reinicia la escena
+        /// <summary>
+        /// Reinicia la escena
+        /// </summary>
         public void RestartScene()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-        
-        public MinoManager GetMinoManager()
-        {
-            return minoManager;
-        }
 
-        // Devuelve el Avatar
+        /// <summary>
+        /// Devuelve el Avatar
+        /// </summary>
+        /// <returns></returns>
         public GameObject GetPlayer()
         {
             if (player == null)
@@ -177,38 +256,59 @@ namespace UCM.IAV.Movimiento
             return player;
         }
 
-        // Devuelve el grafo
+        /// <summary>
+        /// Devuelve el grafo
+        /// </summary>
+        /// <returns></returns>
         public Graph GetGraph()
         {
             return theseusGraph.GetGraph();
         }
 
-        // Devuelve el número de minotauros
+        /// <summary>
+        /// Devuelve el número de minotauros
+        /// </summary>
+        /// <returns></returns>
         public int getNumMinos()
         {
             return numMinos;
         }
 
-        // Cambia el número de minotauros
+        /// <summary>
+        /// Cambia el número de minotauros
+        /// </summary>
         public void setNumMinos()
         {
             numMinos = int.Parse(label2.text);
         }
 
-        // Establece la posición y tamaño de inicio
+        /// <summary>
+        /// Establece la posición y tamaño de inicio
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <param name="size"></param>
         public void SetStart(int i, int j, float size)
         {
             player.transform.position = new Vector3(i * size, 0.2f, j * size);
             startSlab.transform.position = new Vector3(i * size, 0.2f, j * size);
         }
 
-        // Devuelve el nodo de salida
+        /// <summary>
+        /// Devuelve el nodo de salida
+        /// </summary>
+        /// <returns></returns>
         public GameObject GetExitNode()
         {
             return exit;
         }
 
-        // Establece la posición y tamaño de la salida
+        /// <summary>
+        /// Establece la posición y tamaño de la salida
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="j"></param>
+        /// <param name="size"></param>
         public void SetExit(int i, int j, float size)
         {
             exit = new GameObject(); exit.name = "Exit";
@@ -216,13 +316,19 @@ namespace UCM.IAV.Movimiento
             exitSlab.transform.position = new Vector3(i * size, 0.3f, j * size);
         }
 
-        // Cambia el coste de un nodo
+        /// <summary>
+        /// Cambia el coste de un nodo
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="costMultipliyer"></param>
         public void UpdatePathCost(Vector3 position, float costMultipliyer)
         {
             theseusGraph.UpdatePathCost(position, costMultipliyer);
         }
 
-        // Cambia el framerate
+        /// <summary>
+        /// Cambia el framerate
+        /// </summary>
         private void ChangeFrameRate()
         {
             if (frameRate == 30)
@@ -237,19 +343,27 @@ namespace UCM.IAV.Movimiento
             }
         }
 
-        // Cambia el texto del tamaño del laberinto
+        /// <summary>
+        /// Cambia el texto del tamaño del laberinto
+        /// </summary>
         public void ChangeMazeSize()
         {
             mazeSize = label.text;
         }
 
-        // Devuelve el tamaño del laberinto
+        /// <summary>
+        /// Devuelve el tamaño del laberinto
+        /// </summary>
+        /// <returns></returns>
         public string getMazeSize()
         {
             return mazeSize;
         }
 
-        // Cambia el texto de suavizado del camino
+        /// <summary>
+        /// Cambia el texto de suavizado del camino
+        /// </summary>
+        /// <param name="smooth"></param>
         public void ChangeSmooth(bool smooth)
         {
             if (smooth)
@@ -258,31 +372,46 @@ namespace UCM.IAV.Movimiento
                 smoothText.text = "Off";
         }
 
-        // Cambia el texto del número de baldosas visitadas
+        /// <summary>
+        /// Cambia el texto del número de baldosas visitadas
+        /// </summary>
+        /// <param name="visited"></param>
         public void UpdateVisited(int visited)
         {
             visitedText.text = visited.ToString();
         }
 
-        // Cambia el texto de la longitud del camino
+        /// <summary>
+        /// Cambia el texto de la longitud del camino
+        /// </summary>
+        /// <param name="length"></param>
         public void UpdateLength(int length)
         {
             lengthText.text = length.ToString();
         }
 
-        // Cambia el texto del coste del camino
+        /// <summary>
+        /// Cambia el texto del coste del camino
+        /// </summary>
+        /// <param name="cost"></param>
         public void UpdateCost(float cost)
         {
             costText.text = cost.ToString();
         }
 
-        // Cambia el texto del tiempo de búsqueda
+        /// <summary>
+        /// Cambia el texto del tiempo de búsqueda
+        /// </summary>
+        /// <param name="time"></param>
         public void UpdateSearchTime(float time)
         {
             searchTimeText.text = (time * 1000.0f).ToString("F0") + " ms";
         }
 
-        // Cambia el texto del porcentaje de tiempo de búsqueda
+        /// <summary>
+        /// Cambia el texto del porcentaje de tiempo de búsqueda
+        /// </summary>
+        /// <param name="percentage"></param>
         public void UpdateSearchTimePercentage(float percentage)
         {
             percentageTimeText.text = percentage.ToString() + " %";

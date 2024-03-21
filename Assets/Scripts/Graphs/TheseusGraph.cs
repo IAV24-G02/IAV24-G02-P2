@@ -13,48 +13,127 @@ using System;
 
 namespace UCM.IAV.Navegacion
 {
+    /// <summary>
+    /// Enumerado de algoritmos de búsqueda
+    /// </summary>
     public enum TesterGraphAlgorithm
     {
         BFS, DFS, ASTAR
     }
 
+    /// <summary>
+    /// Clase para modelar el grafo de nodos de la escena
+    /// </summary>
     public class TheseusGraph : MonoBehaviour
     {
+        #region Variables
+        /// <summary>
+        /// Grafo de nodos
+        /// </summary>
         [SerializeField]
-        protected Graph graph;                      // Grafo de nodos
+        protected Graph graph;
 
+        /// <summary>
+        /// Algoritmo a usar
+        /// </summary>
         [SerializeField]
-        private TesterGraphAlgorithm algorithm;     // Algoritmo a usar
+        private TesterGraphAlgorithm algorithm;
 
+        /// <summary>
+        /// Prefab de esfera
+        /// </summary>
         [SerializeField]
-        private GameObject spherePrefab;            // Prefab de esfera
+        private GameObject spherePrefab;
 
-        List<GameObject> pathSpheres;               // Esferas del camino
+        /// <summary>
+        /// Esferas del camino
+        /// </summary>
+        List<GameObject> pathSpheres;
 
+        /// <summary>
+        /// Material del camino
+        /// </summary>
         [SerializeField]
-        private Material pathThreadMaterial;        // Material del camino
+        private Material pathThreadMaterial;
 
+        /// <summary>
+        /// Color del camino
+        /// </summary>
         [SerializeField]
-        private Color pathColor;                    // Color del camino
+        private Color pathColor;
 
+        /// <summary>
+        /// Radio de los nodos del camino
+        /// </summary>
         [SerializeField]
         [Range(0.1f, 1f)]
-        private float pathNodeRadius = .3f;         // Radio de los nodos del camino
+        private float pathNodeRadius = .3f;
 
-        private bool ariadna;                       // Activa o desactiva el hilo de Ariadna
-        private bool smoothPath;                    // Suavizar el camino
-        private bool firstHeuristic;                // Indica si se está usando la primera heurística
-        protected GameObject srcObj;                // Objeto origen
-        protected GameObject dstObj;                // Objeto destino
-        protected List<Vertex> path;                // Camino calculado
-        private int pathVisited;                    // Nodos visitados
-        private int pathLength;                     // Longitud del camino
-        private float pathCost;                     // Coste del camino
-        private float pathSearchTime;               // Tiempo de búsqueda
-        private float pathPercentageTimeConsumed;   // Porcentaje de tiempo consumido en la búsqueda
+        /// <summary>
+        /// Activa o desactiva el hilo de Ariadna
+        /// </summary>
+        private bool ariadna;
 
-        protected LineRenderer hilo;                // Hilo de Ariadna
-        protected float hiloOffset = 0.2f;          // Offset del hilo
+        /// <summary>
+        /// Suavizar el camino
+        /// </summary>
+        private bool smoothPath;
+
+        /// <summary>
+        /// Indica si se está usando la primera heurística
+        /// </summary>
+        private bool firstHeuristic;
+
+        /// <summary>
+        /// Objeto origen
+        /// </summary>
+        protected GameObject srcObj;
+
+        /// <summary>
+        /// Objeto destino
+        /// </summary>
+        protected GameObject dstObj;
+
+        /// <summary>
+        /// Camino calculado
+        /// </summary>
+        protected List<Vertex> path;
+
+        /// <summary>
+        /// Nodos visitados
+        /// </summary>
+        private int pathVisited;
+
+        /// <summary>
+        /// Longitud del camino
+        /// </summary>
+        private int pathLength;
+
+        /// <summary>
+        /// Coste del camino
+        /// </summary>
+        private float pathCost;
+
+        /// <summary>
+        /// Tiempo de búsqueda
+        /// </summary>
+        private float pathSearchTime;
+
+        /// <summary>
+        /// Porcentaje de tiempo consumido en la búsqueda
+        /// </summary>
+        private float pathPercentageTimeConsumed;
+
+        /// <summary>
+        /// Hilo de Ariadna
+        /// </summary>
+        protected LineRenderer hilo;
+
+        /// <summary>
+        /// Offset del hilo
+        /// </summary>
+        protected float hiloOffset = 0.2f;
+        #endregion
 
         public virtual void Awake()
         {
@@ -121,13 +200,19 @@ namespace UCM.IAV.Navegacion
             }
         }
 
-        // Devuelve el grafo
+        /// <summary>
+        /// Devuelve el grafo
+        /// </summary>
+        /// <returns></returns>
         public Graph GetGraph()
         {
             return graph;
         }
 
-        // Devuelve el siguiente nodo del camino
+        /// <summary>
+        /// Devuelve el siguiente nodo del camino
+        /// </summary>
+        /// <returns></returns>
         public virtual Transform GetNextNode()
         {
             if (path != null && path.Count > 1)
@@ -138,7 +223,9 @@ namespace UCM.IAV.Navegacion
             return null;
         }
 
-        // Actualiza la información del camino
+        /// <summary>
+        /// Actualiza la información del camino
+        /// </summary>
         private void UpdatePathInfo()
         {
             if (pathLength == 0)
@@ -165,7 +252,9 @@ namespace UCM.IAV.Navegacion
             }
         }
 
-        // Dibuja el hilo de Ariadna
+        /// <summary>
+        /// Dibuja el hilo de Ariadna
+        /// </summary>
         public virtual void DrawThread()
         {
             hilo.positionCount = path.Count;
@@ -183,7 +272,9 @@ namespace UCM.IAV.Navegacion
             }
         }
 
-        // Dibujar esferas en el camino
+        /// <summary>
+        /// Dibujar esferas en el camino
+        /// </summary>
         public void DrawSpheres()
         {
             if (spherePrefab == null)
@@ -204,7 +295,9 @@ namespace UCM.IAV.Navegacion
             }
         }
 
-        // Eliminar esferas del camino
+        /// <summary>
+        /// Eliminar esferas del camino
+        /// </summary>
         public void RemoveSpheres()
         {
             foreach (GameObject go in pathSpheres)
@@ -214,7 +307,11 @@ namespace UCM.IAV.Navegacion
             pathSpheres.Clear();
         }
 
-        // Mostrar el camino calculado
+        /// <summary>
+        /// Mostrar el camino calculado
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="color"></param>
         public void ShowPathVertices(List<Vertex> path, Color color)
         {
             for (int i = 0; i < path.Count; i++)
@@ -227,7 +324,9 @@ namespace UCM.IAV.Navegacion
             }
         }
 
-        // Dibujado de esferas y líneas en el editor
+        /// <summary>
+        /// Dibujado de esferas y líneas en el editor
+        /// </summary>
         virtual public void OnDrawGizmos()
         {
             if (!Application.isPlaying)
@@ -265,7 +364,11 @@ namespace UCM.IAV.Navegacion
             }
         }
 
-        // Actualiza el hilo de Ariadna, activando o desactivando el hilo y quitando las esferas
+        /// <summary>
+        /// Actualiza el hilo de Ariadna, activando o desactivando el hilo 
+        /// y quitando las esferas
+        /// </summary>
+        /// <param name="ar"></param>
         void updateAriadna(bool ar)
         {
             ariadna = ar;
@@ -284,38 +387,60 @@ namespace UCM.IAV.Navegacion
             }
         }
 
-        // Reinicia el camino
+        /// <summary>
+        /// Reinicia el camino
+        /// </summary>
         public virtual void ResetPath()
         {
             path = null;
         }
 
-        // Actualiza el coste de una celda
+        /// <summary>
+        /// Actualiza el coste de una celda
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="costMultipliyer"></param>
         public void UpdatePathCost(Vector3 position, float costMultipliyer)
         {
             graph.UpdateVertexCost(position, costMultipliyer);
         }
 
+        /// <summary>
+        /// Activa/Desactiva el suavizado del camino
+        /// </summary>
         void updateSmooth(bool smooth)
         {
             smoothPath = smooth;
             GameManager.instance.ChangeSmooth(smoothPath);
         }
 
-        // Cambia la heurística entre Euclidea y Manhattan
+        /// <summary>
+        /// Cambia la heurística entre Euclidea y Manhattan
+        /// </summary>
+        /// <returns></returns>
         public string ChangeHeuristic()
         {
             firstHeuristic = !firstHeuristic;
             return firstHeuristic ? "Euclidean" : "Manhattan";
         }
 
-        // Heurística Euclidea
+        /// <summary>
+        /// Heurística Euclidea
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public float Euclidean(Vertex a, Vertex b)
         {
             return Vector3.Distance(a.transform.position, b.transform.position);
         }
 
-        // Heurística Manhattan
+        /// <summary>
+        /// Heurística Manhattan
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public float Manhattan(Vertex a, Vertex b)
         {
             Vector2 posA = a.transform.position;

@@ -17,22 +17,42 @@ namespace UCM.IAV.Movimiento
     /// </summary>
     public class Llegada : ComportamientoAgente
     {
+        #region Variables
+        /// <summary>
+        /// El radio para llegar al objetivo
+        /// </summary>
         [SerializeField]
-        private float targetRadius;         // El radio para llegar al objetivo
+        private float targetRadius;
 
+        /// <summary>
+        /// El radio en el que se empieza a ralentizarse
+        /// </summary>
         [SerializeField]
-        private float slowingRadius;        // El radio en el que se empieza a ralentizarse
+        private float slowingRadius;
 
+        /// <summary>
+        /// La fuerza de ralentizado
+        /// </summary>
         [SerializeField]
-        private float slowingForce;         // La fuerza de ralentizado
+        private float slowingForce;
 
+        /// <summary>
+        /// Cantidad de evasión
+        /// </summary>
         [SerializeField]
-        private float avoidQuantity = 5;    // Cantidad de evasión
+        private float avoidQuantity = 5;
 
+        /// <summary>
+        /// Distancia de raycast
+        /// </summary>
         [SerializeField]
-        private int raycastDistance = 7;    // Distancia de raycast
+        private int raycastDistance = 7;
 
-        private float timeToTarget = 0.1f;  // El tiempo en el que conseguir la aceleracion objetivo
+        /// <summary>
+        /// El tiempo en el que conseguir la aceleracion objetivo
+        /// </summary>
+        private float timeToTarget = 0.1f;
+        #endregion
 
         public override Direccion GetDireccion()
         {
@@ -66,8 +86,6 @@ namespace UCM.IAV.Movimiento
             direccion.lineal = targetVelocity - agente.velocidad;
             direccion.lineal /= timeToTarget;
 
-            //direccion.lineal += Avoidance();
-
             // Comprobamos que no se pase de aceleración
             if (direccion.lineal.magnitude > agente.aceleracionMax)
             {
@@ -91,17 +109,10 @@ namespace UCM.IAV.Movimiento
                 // Use the point's normal to calculate the reflection vector.
                 Vector3 reflectVec = Vector3.Reflect(incomingVec, hit.normal);
 
-                // Draw lines to show the incoming "beam" and the reflection.
-                //Debug.DrawLine(pos, hit.point, Color.red);
-                //Debug.DrawRay(hit.point, reflectVec, Color.green);
-
                 return hit.point + hit.normal * avoidQuantity;
             }
             else
-            {
-                //Debug.DrawLine(pos, dir * distance, Color.yellow);
                 return Vector3.zero;
-            }
         }
 
         Vector3 Avoidance()

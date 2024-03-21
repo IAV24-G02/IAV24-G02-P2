@@ -178,24 +178,35 @@ public class BinaryHeap<T> : ICollection<T> where T : IComparable<T>
         isInternallySorted = true;
     }
 
-    //Función auxiliar que calcula el padre de un nodo
+    /// <summary>
+    /// Función auxiliar que calcula el padre de un nodo
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
     private static int Parent(int index)
     {
         return (index - 1) >> 1;
     }
 
-    //Función auxiliar que calcula el primer hijo de un nodo
+    /// <summary>
+    /// Función auxiliar que calcula el primer hijo de un nodo
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
     private static int Child1(int index)
     {
         return (index << 1) + 1;
     }
 
-    //Función auxiliar que calcula el segundo hijo de un nodo
+    /// <summary>
+    /// Función auxiliar que calcula el segundo hijo de un nodo
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
     private static int Child2(int index)
     {
         return (index << 1) + 2;
     }
-
 
     public IEnumerator<T> GetEnumerator()
     {

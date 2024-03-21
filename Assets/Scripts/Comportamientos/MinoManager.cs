@@ -12,20 +12,46 @@ using UnityEngine;
 
 namespace UCM.IAV.Navegacion
 {
+    /// <summary>
+    /// Clase que gestiona la creación de los minotauros
+    /// </summary>
     public class MinoManager : MonoBehaviour
     {
+        #region Variables
+        /// <summary>
+        /// Prefab del minotauro
+        /// </summary>
         [SerializeField]
-        private GameObject minotaurPrefab;  // Prefab del minotauro
+        private GameObject minotaurPrefab;
 
+        /// <summary>
+        /// False: Genera minotauros de forma aleatoria
+        /// True: Genera minotauros en posiciones fijas a partir de una posición de un GameObject
+        /// </summary>
         [SerializeField]
-        private bool debug = false;         // False: Genera minotauros de forma aleatoria,
-                                            // True: Genera minotauros en posiciones fijas a partir de una posición de un GameObject
-        [SerializeField]
-        private GameObject minoPos;         // Posición de los minotauros para el modo debug
+        private bool debug = false;
 
-        public List<GameObject> minos;      // Lista de minotauros
-        private Graph graph;                // Grafo de la escena
-        private int numMinos = 1;           // Número de minotauros
+        /// <summary>
+        /// Posición de los minotauros para el modo debug
+        /// </summary>
+        [SerializeField]
+        private GameObject minoPos;
+
+        /// <summary>
+        /// Lista de minotauros
+        /// </summary>
+        private List<GameObject> minos;
+
+        /// <summary>
+        /// Grafo de la escena
+        /// </summary>
+        private Graph graph;
+
+        /// <summary>
+        /// Número de minotauros
+        /// </summary>
+        private int numMinos = 1;
+        #endregion
 
         void Start()
         {
@@ -34,6 +60,9 @@ namespace UCM.IAV.Navegacion
             StartUp();
         }
 
+        /// <summary>
+        /// Inicializa la lista de minotauros y el grafo
+        /// </summary>
         void StartUp()
         {
             GameObject graphGO = GameObject.Find("GraphGrid");
@@ -45,6 +74,10 @@ namespace UCM.IAV.Navegacion
                 minos.Add(GenerateMino());
         }
 
+        /// <summary>
+        /// Genera un minotauro dependiendo si estamos en modo debug o no
+        /// Si no, lo genera en una posición aleatoria del grafo
+        /// </summary>
         private GameObject GenerateMino()
         {
             if (debug)

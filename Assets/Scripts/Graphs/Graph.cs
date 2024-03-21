@@ -6,26 +6,65 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
+using UnityEngine;
+using System.Collections.Generic;
+
 namespace UCM.IAV.Navegacion
 {
-    using UnityEngine;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Clase abstracta para grafos
     /// </summary>
     public abstract class Graph : MonoBehaviour
     {
-        public GameObject vertexPrefab;                         // Prefab de vértice
-        protected List<Vertex> vertices;                        // Lista de vértices
-        protected List<List<Vertex>> neighbourVertex;           // Lista de vecinos de cada vértice
-        protected List<List<float>> costs;                      // Costes de las conexiones
-        protected bool[,] mapVertices;                          // Mapa de vértices
-        protected float[,] costsVertices;                       // Costes de los vértices
-        protected int numCols, numRows;                         // Número de columnas y filas
-        public List<Vertex> path;                               // Camino
+        #region Variables
+        /// <summary>
+        /// Prefab de vértice
+        /// </summary>
+        public GameObject vertexPrefab;
 
-        public delegate float Heuristic(Vertex a, Vertex b);    // Delegado para la heurística
+        /// <summary>
+        /// Lista de vértices
+        /// </summary>
+        protected List<Vertex> vertices;
+
+        /// <summary>
+        /// Lista de vecinos de cada vértice
+        /// </summary>
+        protected List<List<Vertex>> neighbourVertex;
+
+        /// <summary>
+        /// Costes de las conexiones
+        /// </summary>
+        protected List<List<float>> costs;
+
+        /// <summary>
+        /// Mapa de vértices
+        /// </summary>
+        protected bool[,] mapVertices;
+
+        /// <summary>
+        /// Costes de los vértices
+        /// </summary>
+        protected float[,] costsVertices;
+
+        /// <summary>
+        /// Número de columnas y filas
+        /// </summary>
+        protected int numCols, numRows;
+
+        /// <summary>
+        /// Camino
+        /// </summary>
+        public List<Vertex> path;
+        #endregion
+
+        /// <summary>
+        /// Delegado para la heurística
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public delegate float Heuristic(Vertex a, Vertex b);
 
         public virtual void Start()
         {
@@ -53,7 +92,11 @@ namespace UCM.IAV.Navegacion
             return null;
         }
 
-        // Devuelve una lista de vértices vecinos
+        /// <summary>
+        /// Devuelve una lista de vértices vecinos
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public virtual Vertex[] GetNeighbours(Vertex v)
         {
             if (ReferenceEquals(neighbourVertex, null) || neighbourVertex.Count == 0 ||
@@ -62,7 +105,11 @@ namespace UCM.IAV.Navegacion
             return neighbourVertex[v.id].ToArray();
         }
 
-        // Devuelve una lista de costes de los vértices vecinos
+        /// <summary>
+        /// Devuelve una lista de costes de los vértices vecinos
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         public virtual float[] GetNeighboursCosts(Vertex v)
         {
             if (ReferenceEquals(neighbourVertex, null) || neighbourVertex.Count == 0 ||
@@ -81,21 +128,37 @@ namespace UCM.IAV.Navegacion
             return costsV;
         }
 
-        // Encuentra caminos óptimos
+        /// <summary>
+        /// Algoritmo de búsqueda BFS
+        /// </summary>
+        /// <param name="srcO"></param>
+        /// <param name="dstO"></param>
+        /// <returns></returns>
         public List<Vertex> GetPathBFS(GameObject srcO, GameObject dstO)
         {
             // IMPLEMENTAR ALGORITMO BFS
             return new List<Vertex>();
         }
 
-        // No encuentra caminos óptimos
+        /// <summary>
+        /// Algoritmo de búsqueda DFS
+        /// </summary>
+        /// <param name="srcO"></param>
+        /// <param name="dstO"></param>
+        /// <returns></returns>
         public List<Vertex> GetPathDFS(GameObject srcO, GameObject dstO)
         {
             // IMPLEMENTAR ALGORITMO DFS
             return new List<Vertex>();
         }
 
-        // Encuentra caminos óptimos
+        /// <summary>
+        /// Algoritmo de búsqueda A*
+        /// </summary>
+        /// <param name="startObject"></param>
+        /// <param name="endObject"></param>
+        /// <param name="heuristic"></param>
+        /// <returns></returns>
         public List<Vertex> GetPathAstar(GameObject startObject, GameObject endObject, Heuristic heuristic = null)
         {
             Vertex start = GetNearestVertex(startObject.transform.position);
@@ -164,6 +227,12 @@ namespace UCM.IAV.Navegacion
                 return BuildPath(current, start);
         }
 
+
+        /// <summary>
+        /// Algoritmo de suavizado de camino
+        /// </summary>
+        /// <param name="inputPath"></param>
+        /// <returns></returns>
         public List<Vertex> Smooth(List<Vertex> inputPath)
         {
             if (inputPath == null || inputPath.Count == 0)
@@ -208,7 +277,12 @@ namespace UCM.IAV.Navegacion
             return outputPath; // devuelvo la lista
         }
 
-        // Reconstruir el camino
+        /// <summary>
+        /// Reconstruye el camino reviertiendo la lista de nodos
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="start"></param>
+        /// <returns></returns>
         private List<Vertex> BuildPath(Vertex current, Vertex start)
         {
             List<Vertex> path = new List<Vertex>() { current }; // path.Add(current);
@@ -222,7 +296,11 @@ namespace UCM.IAV.Navegacion
             return path;
         }
 
-        // Devuelve un vértice a partir de un identificador
+        /// <summary>
+        /// Devuelve un vértice a partir de un identificador
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Vertex GetVertexById(int id)
         {
             if (id < 0 || id >= vertices.Count)
@@ -230,7 +308,11 @@ namespace UCM.IAV.Navegacion
             return vertices[id];
         }
 
-        // Devuelve el coste del camino
+        /// <summary>
+        /// Devuelve el coste del camino
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public float GetPathCost(List<Vertex> path)
         {
             float cost = 0;
@@ -243,13 +325,21 @@ namespace UCM.IAV.Navegacion
             return cost;
         }
 
-        // Devuelve el tiempo de búsqueda del camino
+        /// <summary>
+        /// Devuelve el tiempo de búsqueda del camino
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public float GetPathSearchTime(List<Vertex> path)
         {
             return path.Count * Time.deltaTime;
         }
 
-        // Devuelve el porcentaje del tiempo consumido en la búsqueda del camino
+        /// <summary>
+        /// Devuelve el porcentaje del tiempo consumido en la búsqueda del camino
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public float GetPathSearchTimePercentage(List<Vertex> path)
         {
             return GetPathSearchTime(path) / Time.deltaTime;

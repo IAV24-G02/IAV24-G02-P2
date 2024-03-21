@@ -6,20 +6,38 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
+using UnityEngine;
+
 namespace UCM.IAV.Movimiento
 {
-    using UnityEngine;
-
+    /// <summary>
+    /// Clase que implementa el comportamiento de control de un jugador
+    /// </summary>
     public class ControlJugador: ComportamientoAgente
     {
-        private Vector3 worldPoint;             // Punto en el mundo
-        private Camera mainCamera;              // Cámara principal
+        #region Variables
+        /// <summary>
+        /// Punto en el mundo
+        /// </summary>
+        private Vector3 worldPoint;
 
-        [SerializeField]
-        private string vertexTag = "Vertex";    // Etiqueta de un nodo normal
+        /// <summary>
+        /// Cámara principal
+        /// </summary>
+        private Camera mainCamera;
 
+        /// <summary>
+        /// Etiqueta de un nodo normal
+        /// </summary>
         [SerializeField]
-        private string obstacleTag = "Wall";    // Etiqueta de un obstáculo, tipo pared...
+        private string vertexTag = "Vertex";
+
+        /// <summary>
+        /// Etiqueta de un obstáculo, tipo pared...
+        /// </summary>
+        [SerializeField]
+        private string obstacleTag = "Wall";
+        #endregion
 
         public override void Awake()
         {
@@ -27,6 +45,9 @@ namespace UCM.IAV.Movimiento
             mainCamera = Camera.main;
         }
 
+        /// <summary>
+        /// Devuelve el nodo que se encuentra en la posición de la pantalla
+        /// </summary>
         private GameObject GetNodeFromScreen(Vector3 screenPosition)
         {
             GameObject node = null;

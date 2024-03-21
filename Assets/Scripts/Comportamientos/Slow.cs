@@ -6,24 +6,23 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UCM.IAV.Movimiento;
 
 namespace UCM.IAV.Navegacion
 {
-    using UCM.IAV.Movimiento;
-
+    /// <summary>
+    /// Clase que modela el comportamiento de ralentizar al jugador al entrar en contacto con el objeto
+    /// </summary>
     public class Slow : MonoBehaviour
     {
-        float vel = 0.0f;
-        
-        /*
-         *  Cuando el jugador (identificado con el ControlJugador) se acerca al trigger del
-         *  minotauro, su velocidad máxima en el componente Agente se ve reducida enormemente.
-         *  Si logra abandonar el trigger, se restaura su velocidad.
-         */
-
+        #region Variables
+        /// <summary>
+        /// Velocidad del jugador
+        /// </summary>
+        private float vel = 0.0f;
+        #endregion
+    
         private void OnTriggerEnter(Collider other)
         {
             ControlJugador animator = other.gameObject.GetComponent<ControlJugador>();

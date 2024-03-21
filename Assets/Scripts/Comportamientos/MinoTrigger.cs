@@ -3,16 +3,34 @@ using UCM.IAV.Navegacion;
 
 namespace UCM.IAV.Movimiento
 {
+    /// <summary>
+    /// Clase que gestiona la influencia de los minotauros en las baldosas del grafo
+    /// </summary>
     public class MinoTrigger : MonoBehaviour
     {
+        #region Variables
+        /// <summary>
+        /// Coste de la celda cuando el teseo está en el radio de detección
+        /// </summary>
         [SerializeField]
-        private float costMutipliyer = 5.0f;    // Coste de la celda cuando el teseo está en el radio de detección
+        private float costMutipliyer = 5.0f;
 
+        /// <summary>
+        /// Radio de detección
+        /// </summary>
         [SerializeField]
-        private float detectionRadio = 5.0f;    // Radio de detección
+        private float detectionRadio = 5.0f;
 
-        private GameObject sphere;              // Esfera que representa el radio de detección
-        private SphereCollider sphereCollider;  // Collider esférico para detectar al teseo
+        /// <summary>
+        /// Esfera que representa el radio de detección
+        /// </summary>
+        private GameObject sphere;
+
+        /// <summary>
+        /// Collider esférico para detectar las baldosas
+        /// </summary>
+        private SphereCollider sphereCollider;
+        #endregion
 
         private void Start()
         {

@@ -15,9 +15,22 @@ namespace UCM.IAV.Movimiento
     /// </summary>
     public class Teseo : MonoBehaviour
     {
-        private bool ariadna;           // Variable para controlar si hay que seguir el camino o no
-        private SeguirCamino segCam;    // Componente de SeguirCamino
-        private ControlJugador contJug; // Componente de ControlJugador
+        #region Variables
+        /// <summary>
+        /// Variable para controlar si hay que seguir el camino o no
+        /// </summary>
+        private bool ariadna;
+
+        /// <summary>
+        /// Componente de SeguirCamino
+        /// </summary>
+        private SeguirCamino segCam;
+
+        /// <summary>
+        /// Componente de ControlJugador
+        /// </summary>
+        private ControlJugador contJug;
+        #endregion
 
         void Start()
         {
@@ -34,7 +47,10 @@ namespace UCM.IAV.Movimiento
             }
         }
 
-        // Actualiza el comportamiento del teseo
+        /// <summary>
+        /// Actualiza el comportamiento del teseo
+        /// </summary>
+        /// <param name="ar"></param>
         public void updateAriadna(bool ar)
         {
             ariadna = ar;

@@ -7,21 +7,40 @@ namespace UCM.IAV.Movimiento
     /// </summary>
     public class Deteccion : MonoBehaviour
     {
-        private Merodear merodear;              // Componente de merodear
-        private Llegada llegada;                // Componente de llegada
+        #region Variables
+        /// <summary>
+        /// Componente de merodear
+        /// </summary>
+        private Merodear merodear;
 
-        Vector3[] positionsInCone;
+        /// <summary>
+        /// Componente de llegada
+        /// </summary>
+        private Llegada llegada;
 
+        /// <summary>
+        /// Ángulo del cono de visión
+        /// </summary>
         [SerializeField]
-        float coneAngle = 45f; // Ángulo del cono en grados
+        private float coneAngle = 45f;
 
+        /// <summary>
+        /// Distancia del cono de visión
+        /// </summary>
         [SerializeField]
-        float coneDistance = 5f; // Distancia del cono
+        private float coneDistance = 5f;
 
+        /// <summary>
+        /// Componente Transform del objetivo
+        /// </summary>
         [SerializeField]
-        Transform objetivo;
+        private Transform objetivo;
 
+        /// <summary>
+        /// GameObject del avatar
+        /// </summary>
         private GameObject avatarGO;
+        #endregion
 
         private void Awake()
         {
@@ -71,6 +90,9 @@ namespace UCM.IAV.Movimiento
             }
         }
 
+        /// <summary>
+        /// Activa el comportamiento de merodear y desactiva el de llegada
+        /// </summary>
         private void Merodea()
         {
             merodear.enabled = true;
@@ -78,6 +100,10 @@ namespace UCM.IAV.Movimiento
             llegada.enabled = false;
         }
 
+        /// <summary>
+        /// Activa el comportamiento de llegada y desactiva el de merodear
+        /// </summary>
+        /// <param name="other"></param>
         private void Persigue(Collider other)
         {
             merodear.enabled = false;

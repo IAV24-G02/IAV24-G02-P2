@@ -12,16 +12,43 @@ using UCM.IAV.Movimiento;
 
 namespace UCM.IAV.Navegacion
 {
+    /// <summary>
+    /// Clase que modela un nodo de un grafo
+    /// </summary>
     [System.Serializable]
     public class Vertex : MonoBehaviour, IComparable<Vertex>
     {
-        public int id { get; set; }                     // Identificador del nodo
-        public int PreviousId { get; set; }             // Identificador del nodo
-        public float Cost { get; set; }                 // Coste del nodo
-        public float CostSoFar { get; set; }            // Coste acumulado hasta el nodo seleccionado
-        public float EstimatedTotalCost { get; set; }   // Coste total estimado hasta el nodo seleccionado
+        #region Variables
+        /// <summary>
+        /// Identificador del nodo
+        /// </summary>
+        public int id { get; set; }
 
-        private GameObject influence; // Objeto para mostrar la influencia
+        /// <summary>
+        /// Identificador del nodo
+        /// </summary>
+        public int PreviousId { get; set; }
+
+        /// <summary>
+        /// Coste del nodo
+        /// </summary>
+        public float Cost { get; set; }
+
+        /// <summary>
+        /// Coste acumulado hasta el nodo seleccionado
+        /// </summary>
+        public float CostSoFar { get; set; }
+
+        /// <summary>
+        /// Coste total estimado hasta el nodo seleccionado
+        /// </summary>
+        public float EstimatedTotalCost { get; set; }
+
+        /// <summary>
+        /// Objeto para mostrar la influencia
+        /// </summary>
+        private GameObject influence;
+        #endregion
 
         public Vertex(int previousId = -1, float cost = 1.0f, float costSoFar = 0.0f, float estimatedTotalCost = 0.0f)
         {
@@ -38,6 +65,9 @@ namespace UCM.IAV.Navegacion
                 influence.SetActive(false);
         }
 
+        /// <summary>
+        /// Activa o desactiva la influencia del nodo y actualiza el coste de la baldosa
+        /// </summary>
         public void SetInfluence(bool doesInfluence, float costMultiPliyer = 1.0f)
         {
             if (influence != null)

@@ -8,18 +8,49 @@ namespace UCM.IAV.Movimiento
     /// </summary>
     public class Merodear : ComportamientoAgente
     {
+        #region Variables
+        /// <summary>
+        /// Distancia para considerar que ha llegado a la posición objetivo
+        /// </summary>
         [SerializeField]
-        public float offset = 0.2f;         // Distancia para considerar que ha llegado a la posición objetivo
+        public float offset = 0.2f;
 
+        /// <summary>
+        /// Tiempo de espera
+        /// </summary>
         [SerializeField]
-        private float waitingTime = 0.2f;   // Tiempo de espera
+        private float waitingTime = 0.2f;
 
-        private Graph graph;                // Grafo de la escena
-        private Vertex lastVertex;          // Último vértice visitado
-        private Vertex actualVertex;        // Vértice actual
-        private Vector3 nextPosition;       // Posición objetivo
-        private bool isWaiting;             // Indica si el agente parado o no
-        private float counterTime;          // Contador de tiempo
+        /// <summary>
+        /// Grafo de la escena
+        /// </summary>
+        private Graph graph;
+
+        /// <summary>
+        /// Último vértice visitado
+        /// </summary>
+        private Vertex lastVertex;
+
+        /// <summary>
+        /// Vértice actual
+        /// </summary>
+        private Vertex actualVertex;
+
+        /// <summary>
+        /// Posición objetivo
+        /// </summary>
+        private Vector3 nextPosition;
+
+        /// <summary>
+        /// Indica si el agente parado o no
+        /// </summary>
+        private bool isWaiting;
+
+        /// <summary>
+        /// Contador de tiempo
+        /// </summary>
+        private float counterTime;
+        #endregion
 
         private void Start()
         {
@@ -84,13 +115,18 @@ namespace UCM.IAV.Movimiento
             return direccion;
         }
 
-        // Devuelve la posición sin tener en cuenta la altura
+        /// <summary>
+        /// Devuelve la posición sin tener en cuenta la altura
+        /// </summary>
+        /// <returns></returns>
         private Vector3 GetPositionWithoutHeight()
         {
             return new Vector3(transform.position.x, 0, transform.position.z);
         }
 
-        // Reinicia la posición objetivo
+        /// <summary>
+        /// Reinicia la posición objetivo
+        /// </summary>
         public void ResetPosition()
         {
             nextPosition = GetPositionWithoutHeight();

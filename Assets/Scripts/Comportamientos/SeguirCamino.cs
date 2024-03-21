@@ -16,9 +16,17 @@ namespace UCM.IAV.Movimiento
     /// </summary>
     public class SeguirCamino: ComportamientoAgente
     {
-        Transform sigNodo;
+        #region Variables
+        /// <summary>
+        /// Componente Transform del siguiente nodo
+        /// </summary>
+        private Transform sigNodo;
 
+        /// <summary>
+        /// Grafo de la escena
+        /// </summary>
         public TheseusGraph graph;
+        #endregion
 
         override public void Update()
         {
@@ -45,6 +53,9 @@ namespace UCM.IAV.Movimiento
             return direccion;
         }
 
+        /// <summary>
+        /// Resetea el camino
+        /// </summary>
         public void ResetPath()
         {
             graph.ResetPath();
