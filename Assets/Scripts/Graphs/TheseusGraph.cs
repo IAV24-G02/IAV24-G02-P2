@@ -291,9 +291,9 @@ namespace UCM.IAV.Navegacion
         }
 
         // Actualiza el coste de una celda
-        public void UpdatePathCost(Vertex v, float costMultipliyer)
+        public void UpdatePathCost(Vector3 position, float costMultipliyer)
         {
-            graph.UpdateVertexCost(v, costMultipliyer);
+            graph.UpdateVertexCost(position, costMultipliyer);
         }
 
         void updateSmooth(bool smooth)

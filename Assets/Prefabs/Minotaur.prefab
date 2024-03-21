@@ -758,7 +758,7 @@ MonoBehaviour:
     type: 3}
   targetRadius: 0
   slowingRadius: 5
-  slowingForce: 3
+  slowingForce: 0.1
   avoidQuantity: 0
   raycastDistance: 7
 --- !u!114 &5911507637772140075
@@ -1048,7 +1048,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

@@ -287,6 +287,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 211184544}
   m_CullTransparentMesh: 1
+--- !u!1 &307780735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 307780736}
+  m_Layer: 0
+  m_Name: MinoDebugPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &307780736
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307780735}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4, y: 0, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &394278707
 GameObject:
   m_ObjectHideFlags: 0
@@ -2763,7 +2794,7 @@ GameObject:
   - component: {fileID: 1580546820}
   m_Layer: 0
   m_Name: MinoManager
-  m_TagString: Untagged
+  m_TagString: MinoManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2782,6 +2813,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minotaurPrefab: {fileID: 5856985828648263931, guid: a28f19a75248a0949bb33e20b0a58fcc,
     type: 3}
+  debug: 0
+  minoPos: {fileID: 307780735}
+  minos: []
 --- !u!4 &1580546821
 Transform:
   m_ObjectHideFlags: 0
@@ -2931,6 +2965,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 3927382212531977757, guid: b3cc6905fc77e094aa2dbca20e81e2d4,
+        type: 3}
+      propertyPath: mino
+      value: 
+      objectReference: {fileID: 1580546819}
     - target: {fileID: 7991256408961658696, guid: b3cc6905fc77e094aa2dbca20e81e2d4,
         type: 3}
       propertyPath: m_RootOrder
@@ -3536,3 +3575,4 @@ SceneRoots:
   - {fileID: 1299422304}
   - {fileID: 2079900997}
   - {fileID: 1580546821}
+  - {fileID: 307780736}

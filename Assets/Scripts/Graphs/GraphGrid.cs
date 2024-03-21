@@ -6,16 +6,17 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
+using UnityEngine;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using UCM.IAV.Movimiento;
+
 namespace UCM.IAV.Navegacion
 {
-
-    using UnityEngine;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using UCM.IAV.Movimiento;
-    using UnityEditor;
-
+    /// <summary>
+    /// Clase para grafos de cuadrícula
+    /// </summary>
     public class GraphGrid : Graph
     {
         const int MAX_TRIES = 1000;
@@ -92,7 +93,6 @@ namespace UCM.IAV.Navegacion
                     vertexObjs = new GameObject[numRows * numCols];
                     mapVertices = new bool[numRows, numCols];
                     costsVertices = new float[numRows, numCols];
-                    neighbourConnections = new List<Connection>(numRows * numCols);
 
                     // Leer mapa
                     for (i = 0; i < numRows; i++)
@@ -128,9 +128,9 @@ namespace UCM.IAV.Navegacion
                             vertexObjs[id].name = vertexObjs[id].name.Replace("(Clone)", id.ToString());
                             Vertex v = vertexObjs[id].AddComponent<Vertex>();
                             v.id = id;
+                            v.Cost = defaultCost;
                             vertices.Add(v);
                             neighbourVertex.Add(new List<Vertex>());
-                            neighbourConnections.Add(new Connection());
 
                             vertexObjs[id].transform.localScale *= cellSize;
                         }
@@ -161,7 +161,6 @@ namespace UCM.IAV.Navegacion
             int i, j;
             int vertexId = GridToId(x, y);
             neighbourVertex[vertexId] = new List<Vertex>();
-            neighbourConnections[vertexId] = new Connection();
             Vector2[] pos = new Vector2[0];
             if (get8)
             {
@@ -199,12 +198,6 @@ namespace UCM.IAV.Navegacion
                 int id = GridToId(j, i);
                 neighbourVertex[vertexId].Add(vertices[id]);
                 costsVertices[i, j] = defaultCost;
-
-                Connection connection = new Connection();
-                connection.FromNode = vertices[vertexId];
-                connection.ToNode = vertices[id];
-                connection.Cost = defaultCost;
-                neighbourConnections.Add(connection);
             }
         }
 
@@ -263,61 +256,51 @@ namespace UCM.IAV.Navegacion
             return pos;
         }
 
-        public override void UpdateVertexCost(Vertex v, float costMultiplier)
+        public override void UpdateVertexCost(Vector3 position, float costMultiplier)
         {
+            //Debug.Log("ANTES");
+            //string a = "";
+            //for (int i = 0; i < numRows; i++)
+            //{
+            //    for (int j = 0; j < numCols; j++)
+            //    {
+            //        a += costsVertices[i, j] + " ";
+            //    }
+            //    a += "\n";
+            //}
+            //Debug.Log(a);
+            //Debug.Log("=====================================");
+
+            Vertex v = GetNearestVertex(position);
             Vector2 gridPos = IdToGrid(v.id);
 
             int x = (int)gridPos.y;
             int y = (int)gridPos.x;
 
-            if (x > 0 && x < numRows - 1 && y > 0 && y < numCols - 1)
+            costsVertices[x, y] = defaultCost * costMultiplier;
+
+            List<Vertex> neighbors = neighbourVertex[v.id];
+            foreach (Vertex neighbor in neighbors)
             {
-                costsVertices[x, y] = defaultCost * costMultiplier;
-                neighbourConnections[GridToId(y, x)].Cost = defaultCost * costMultiplier;
+                Vector2 neighborGridPos = IdToGrid(neighbor.id);
+                int neighborX = (int)neighborGridPos.y;
+                int neighborY = (int)neighborGridPos.x;
+
+                neighbor.Cost = costsVertices[neighborX, neighborY];
             }
 
-            if (x > 0)
-            {
-                costsVertices[x - 1, y] = defaultCost * costMultiplier;
-                neighbourConnections[GridToId(y, x - 1)].Cost = defaultCost * costMultiplier;
-            }
-            if (x < numRows - 1)
-            {
-                costsVertices[x + 1, y] = defaultCost * costMultiplier;
-                neighbourConnections[GridToId(y, x + 1)].Cost = defaultCost * costMultiplier;
-            }
-            if (y > 0)
-            {
-                costsVertices[x, y - 1] = defaultCost * costMultiplier;
-                neighbourConnections[GridToId(y - 1, x)].Cost = defaultCost * costMultiplier;
-            }
-            if (y < numCols - 1)
-            {
-                costsVertices[x, y + 1] = defaultCost * costMultiplier;
-                neighbourConnections[GridToId(y + 1, x)].Cost = defaultCost * costMultiplier;
-            }
-
-            // Para ver los costes en consola
-            string a = "";
-            for (int i = 0; i < numRows; i++)
-            {
-                for (int j = 0; j < numCols; j++)
-                {
-                    a += costsVertices[i, j] + " ";
-                }
-                a += "\n";
-            }
-            Debug.Log(a);
-            Debug.Log("=====================================");
-            string b = "";
-            for (int k = 0; k < neighbourConnections.Count; k++)
-            {
-                Connection c = neighbourConnections[k];
-                b += c.Cost + " ";
-                if (k != 0 && k % numCols == 0) b += "\n";
-            }
-            Debug.Log(b);
-            Debug.Log("=====================================");
+            //Debug.Log("DESPUES");
+            //string b = "";
+            //for (int i = 0; i < numRows; i++)
+            //{
+            //    for (int j = 0; j < numCols; j++)
+            //    {
+            //        b += costsVertices[i, j] + " ";
+            //    }
+            //    b += "\n";
+            //}
+            //Debug.Log(a);
+            //Debug.Log("=====================================");
         }
 
         private GameObject WallInstantiate(Vector3 position, int i, int j)

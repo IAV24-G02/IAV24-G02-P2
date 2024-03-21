@@ -25,6 +25,8 @@ namespace UCM.IAV.Movimiento
         private TheseusGraph theseusGraph;          // Grafo del laberinto
         private int numMinos = 1;                   // Número de minotauros
 
+        private GameObject mino;                    // Objeto Gestor de minotauros
+        private MinoManager minoManager;            // Gestor de minotauros
         private GameObject player = null;           // Jugador
         private GameObject startSlab = null;        // Baldosa de inicio
         private GameObject exitSlab = null;         // Baldosa de salida
@@ -140,6 +142,9 @@ namespace UCM.IAV.Movimiento
                 searchTimeText.text = "0 ms";
                 percentageTimeText = GameObject.FindGameObjectWithTag("Percentage Time Consumed").GetComponent<Text>();
                 percentageTimeText.text = "0.0 %";
+                mino = GameObject.FindGameObjectWithTag("MinoManager");
+                if (mino != null) minoManager = mino.GetComponent<MinoManager>();
+                else minoManager = null;
                 theseusGraph = GameObject.FindGameObjectWithTag("TesterGraph").GetComponent<TheseusGraph>();
                 exitSlab = GameObject.FindGameObjectWithTag("Exit");
                 startSlab = GameObject.FindGameObjectWithTag("Start");
@@ -159,6 +164,11 @@ namespace UCM.IAV.Movimiento
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         
+        public MinoManager GetMinoManager()
+        {
+            return minoManager;
+        }
+
         // Devuelve el Avatar
         public GameObject GetPlayer()
         {
@@ -207,9 +217,9 @@ namespace UCM.IAV.Movimiento
         }
 
         // Cambia el coste de un nodo
-        public void UpdatePathCost(Vertex v, float costMultipliyer)
+        public void UpdatePathCost(Vector3 position, float costMultipliyer)
         {
-            theseusGraph.UpdatePathCost(v, costMultipliyer);
+            theseusGraph.UpdatePathCost(position, costMultipliyer);
         }
 
         // Cambia el framerate

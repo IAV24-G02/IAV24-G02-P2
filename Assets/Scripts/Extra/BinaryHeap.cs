@@ -57,7 +57,11 @@ public class BinaryHeap<T> : ICollection<T> where T : IComparable<T>
     /// <summary>
     /// Crea un montículo binario.
     /// </summary>
-    public BinaryHeap() { }
+    public BinaryHeap()
+    {
+        Capacity = DEFAULT_SIZE;
+        inUse = 0;
+    }
 
     /// <summary>
     /// Crea un montículo binario.

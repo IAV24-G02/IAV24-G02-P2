@@ -21,6 +21,7 @@ TagManager:
   - Cost
   - Search Time
   - Percentage Time Consumed
+  - MinoManager
   layers:
   - Default
   - TransparentFX

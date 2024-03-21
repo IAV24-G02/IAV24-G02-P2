@@ -32,18 +32,14 @@ namespace UCM.IAV.Movimiento
         {
             // Por Duck Typing, si el objeto con el que colisiona es una baldosa, cambiamos su coste y color
             if (!ReferenceEquals(other.GetComponent<Vertex>(), null))
-            {
                 other.GetComponent<Vertex>().SetInfluence(true, costMutipliyer);
-            }
         }
 
         private void OnTriggerExit(Collider other)
         {
             // Por Duck Typing, si el objeto con el que colisiona es una baldosa, cambiamos su coste y color
             if (!ReferenceEquals(other.GetComponent<Vertex>(), null))
-            {
                 other.GetComponent<Vertex>().SetInfluence(false);
-            }
         }
     }
 }

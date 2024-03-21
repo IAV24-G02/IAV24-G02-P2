@@ -17,9 +17,15 @@ namespace UCM.IAV.Navegacion
         [SerializeField]
         private GameObject minotaurPrefab;  // Prefab del minotauro
 
+        [SerializeField]
+        private bool debug = false;         // False: Genera minotauros de forma aleatoria,
+                                            // True: Genera minotauros en posiciones fijas a partir de una posición de un GameObject
+        [SerializeField]
+        private GameObject minoPos;         // Posición de los minotauros para el modo debug
+
+        public List<GameObject> minos;      // Lista de minotauros
         private Graph graph;                // Grafo de la escena
         private int numMinos = 1;           // Número de minotauros
-        private List<GameObject> minos;     // Lista de minotauros
 
         void Start()
         {
@@ -41,7 +47,10 @@ namespace UCM.IAV.Navegacion
 
         private GameObject GenerateMino()
         {
-            return Instantiate(minotaurPrefab, graph.GetRandomPos().transform.position + new Vector3(0, 0.3f, 0), Quaternion.identity);
+            if (debug)
+                return Instantiate(minotaurPrefab, minoPos.transform.position, Quaternion.identity);
+            else
+                return Instantiate(minotaurPrefab, graph.GetRandomPos().transform.position + new Vector3(0, 0.3f, 0), Quaternion.identity);
         }
     }
 }

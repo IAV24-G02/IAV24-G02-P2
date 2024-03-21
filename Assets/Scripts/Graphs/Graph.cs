@@ -23,13 +23,9 @@ namespace UCM.IAV.Navegacion
         protected bool[,] mapVertices;                          // Mapa de vértices
         protected float[,] costsVertices;                       // Costes de los vértices
         protected int numCols, numRows;                         // Número de columnas y filas
-        protected List<Connection> neighbourConnections;        // Listas de conexiones vecinas
+        public List<Vertex> path;                               // Camino
 
-        // Delegado para la heurística
-        public delegate float Heuristic(Vertex a, Vertex b);
-
-        // Used for getting path in frames
-        public List<Vertex> path;
+        public delegate float Heuristic(Vertex a, Vertex b);    // Delegado para la heurística
 
         public virtual void Start()
         {
@@ -45,7 +41,7 @@ namespace UCM.IAV.Navegacion
             return vertices.Count;
         }
 
-        public virtual void UpdateVertexCost(Vertex v, float costMultipliyer) { }
+        public virtual void UpdateVertexCost(Vector3 position, float costMultipliyer) { }
 
         public virtual Vertex GetNearestVertex(Vector3 position)
         {
@@ -57,20 +53,7 @@ namespace UCM.IAV.Navegacion
             return null;
         }
 
-        // Devuelve una lista de conexiones vecinas
-        public virtual HashSet<Connection> GetConnectionNeighbours(Vertex v)
-        {
-            // Usar un set para evitar la duplicación de conexiones
-            HashSet<Connection> uniqueConnections = new HashSet<Connection>();
-            foreach (Connection connection in neighbourConnections)
-            {
-                if (connection != null && connection.FromNode == v)
-                    uniqueConnections.Add(connection);
-            }
-            // Devolverlo como una lista
-            return uniqueConnections;
-        }
-
+        // Devuelve una lista de vértices vecinos
         public virtual Vertex[] GetNeighbours(Vertex v)
         {
             if (ReferenceEquals(neighbourVertex, null) || neighbourVertex.Count == 0 ||
@@ -79,6 +62,7 @@ namespace UCM.IAV.Navegacion
             return neighbourVertex[v.id].ToArray();
         }
 
+        // Devuelve una lista de costes de los vértices vecinos
         public virtual float[] GetNeighboursCosts(Vertex v)
         {
             if (ReferenceEquals(neighbourVertex, null) || neighbourVertex.Count == 0 ||
@@ -114,89 +98,77 @@ namespace UCM.IAV.Navegacion
         // Encuentra caminos óptimos
         public List<Vertex> GetPathAstar(GameObject startObject, GameObject endObject, Heuristic heuristic = null)
         {
-            Vertex startNode = GetNearestVertex(startObject.transform.position);
-            Vertex goalNode = GetNearestVertex(endObject.transform.position);
-            if (startNode == null || goalNode == null)
+            Vertex start = GetNearestVertex(startObject.transform.position);
+            Vertex goal = GetNearestVertex(endObject.transform.position);
+            if (start == null || goal == null)
                 return null;
 
-            NodeRecord startRecord = new NodeRecord(startNode, null, 0, heuristic(startNode, goalNode));
+            start.PreviousId = -1; // Lo inicializamos a "null"
+            start.CostSoFar = 0;
+            start.EstimatedTotalCost = heuristic(start, goal);
 
-            PathFindingList open = new PathFindingList();
-            open.Add(startRecord);
-            PathFindingList closed = new PathFindingList();
+            BinaryHeap<Vertex> open = new BinaryHeap<Vertex>();
+            open.Add(start);
+            BinaryHeap<Vertex> closed = new BinaryHeap<Vertex>();
 
-            NodeRecord current = new NodeRecord();
+            Vertex current = new Vertex();
 
-            while (open.Length() > 0)
+            while (open.Count > 0)
             {
-                current = open.SmallestElement();
-                if (current.Node == goalNode)
+                current = open.Top;
+                if (current.id == goal.id)
                     break;
 
-                HashSet<Connection> connections = GetConnectionNeighbours(current.Node);
+                Vertex[] connections = GetNeighbours(current);
 
-                foreach (Connection connection in connections)
+                foreach (Vertex connection in connections)
                 {
-                    Vertex endNode = connection.ToNode;
+                    Vertex endNode = connection;
                     float endNodeCost = current.CostSoFar + connection.Cost;
-                    NodeRecord endNodeRecord;
                     float endNodeHeuristic;
 
                     if (closed.Contains(endNode))
                     {
-                        endNodeRecord = closed.Find(endNode);
-
-                        if (endNodeRecord.CostSoFar <= endNodeCost)
+                        if (endNode.CostSoFar <= endNodeCost)
                             continue;
 
-                        closed.Remove(endNodeRecord);
+                        closed.Remove(endNode);
 
-                        endNodeHeuristic = endNodeRecord.EstimatedTotalCost - endNodeRecord.CostSoFar;
+                        endNodeHeuristic = endNode.EstimatedTotalCost - endNode.CostSoFar;
                     }
                     else if (open.Contains(endNode))
                     {
-                        endNodeRecord = open.Find(endNode);
-
-                        if (endNodeRecord.CostSoFar <= endNodeCost)
+                        if (endNode.CostSoFar <= endNodeCost)
                             continue;
 
-                        endNodeHeuristic = endNodeRecord.Cost - endNodeRecord.CostSoFar;
+                        endNodeHeuristic = endNode.EstimatedTotalCost - endNode.CostSoFar;
                     }
                     else
-                    {
-                        endNodeRecord = new NodeRecord(endNode, current, connection.Cost);
-                        endNodeHeuristic = heuristic(endNode, goalNode);
-                    }
+                        endNodeHeuristic = heuristic(endNode, goal);
 
-                    endNodeRecord.CostSoFar = endNodeCost;
-                    endNodeRecord.EstimatedTotalCost = endNodeCost + endNodeHeuristic;
+                    endNode.CostSoFar = endNodeCost;
+                    endNode.PreviousId = current.id;
+                    endNode.EstimatedTotalCost = endNodeCost + endNodeHeuristic;
 
                     if (!open.Contains(endNode))
-                        open.Add(endNodeRecord);
+                        open.Add(endNode);
                 }
 
                 open.Remove(current);
                 closed.Add(current);
             }
 
-            if (current.Node != goalNode)
+            if (current.id != goal.id)
                 return null;
             else
-            {
-                path = new List<Vertex>() { current.Node }; // path.Add(current.Node);
-                while (current.PreviousNode != startRecord.PreviousNode)
-                {
-                    path.Add(current.PreviousNode.Node);
-                    current = current.PreviousNode;
-                }
-                
-                path.Reverse();
-                return path;
-            }
+                return BuildPath(current, start);
         }
 
         public List<Vertex> Smooth(List<Vertex> inputPath)
         {
+            if (inputPath == null || inputPath.Count == 0)
+                return inputPath;
+
             LayerMask obstaculo = LayerMask.GetMask("Obstaculo"); // defino la capa de obstáculos a examinar
 
             // Si el camino es solo de dos nodos de longitud, entonces no se puede suavizar
@@ -236,21 +208,26 @@ namespace UCM.IAV.Navegacion
             return outputPath; // devuelvo la lista
         }
 
-        // Reconstruir el camino, dando la vuelta a la lista de nodos 'padres' /previos que hemos ido anotando
-        private List<Vertex> BuildPath(int srcId, int dstId, ref int[] prevList)
+        // Reconstruir el camino
+        private List<Vertex> BuildPath(Vertex current, Vertex start)
         {
-            List<Vertex> path = new List<Vertex>();
-
-            if (dstId < 0 || dstId >= vertices.Count)
-                return path;
-
-            int prev = dstId;
-            do
+            List<Vertex> path = new List<Vertex>() { current }; // path.Add(current);
+            while (current.id != start.id)
             {
-                path.Add(vertices[prev]);
-                prev = prevList[prev];
-            } while (prev != srcId);
+                Vertex prevVertex = GetVertexById(current.PreviousId);
+                path.Add(prevVertex);
+                current = prevVertex;
+            }
+            path.Reverse();
             return path;
+        }
+
+        // Devuelve un vértice a partir de un identificador
+        public Vertex GetVertexById(int id)
+        {
+            if (id < 0 || id >= vertices.Count)
+                return null;
+            return vertices[id];
         }
 
         // Devuelve el coste del camino

@@ -15,9 +15,21 @@ namespace UCM.IAV.Navegacion
     [System.Serializable]
     public class Vertex : MonoBehaviour, IComparable<Vertex>
     {
-        public int id; // Identificador del nodo
+        public int id { get; set; }                     // Identificador del nodo
+        public int PreviousId { get; set; }             // Identificador del nodo
+        public float Cost { get; set; }                 // Coste del nodo
+        public float CostSoFar { get; set; }            // Coste acumulado hasta el nodo seleccionado
+        public float EstimatedTotalCost { get; set; }   // Coste total estimado hasta el nodo seleccionado
 
-        private GameObject influence;
+        private GameObject influence; // Objeto para mostrar la influencia
+
+        public Vertex(int previousId = -1, float cost = 1.0f, float costSoFar = 0.0f, float estimatedTotalCost = 0.0f)
+        {
+            PreviousId = previousId;
+            Cost = cost;
+            CostSoFar = costSoFar;
+            EstimatedTotalCost = estimatedTotalCost;
+        }
 
         private void Start()
         {
@@ -31,7 +43,8 @@ namespace UCM.IAV.Navegacion
             if (influence != null)
                 influence.SetActive(doesInfluence);
 
-            GameManager.instance.UpdatePathCost(this, costMultiPliyer);
+            Cost *= costMultiPliyer;
+            GameManager.instance.UpdatePathCost(this.transform.position, costMultiPliyer);
         }
 
         public int CompareTo(Vertex other)
