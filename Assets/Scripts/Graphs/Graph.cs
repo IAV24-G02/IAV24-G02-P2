@@ -197,26 +197,33 @@ namespace UCM.IAV.Navegacion
 
         public List<Vertex> Smooth(List<Vertex> inputPath)
         {
+            LayerMask obstaculo = LayerMask.GetMask("Obstaculo"); // defino la capa de obstáculos a examinar
+
             // Si el camino es solo de dos nodos de longitud, entonces no se puede suavizar
             if (inputPath.Count == 2)
                 return inputPath;
 
             // Compilar un camino de salida
-            List<Vertex> outputPath = new List<Vertex>() { inputPath[0] }; // outputPath.Add(inputPath[0]);
+            List<Vertex> outputPath = new List<Vertex>() { inputPath[0] };
 
-            //Se hace un seguimiento de la posición en la que se encuentra. Se empieza con dos, ya que se asume que dos nodos adyacentes pasarán el trazado del rayo
+            // Se hace un seguimiento de la posición en la que se encuentra. Se empieza con dos, ya que se asume que dos nodos adyacentes pasarán el trazado del rayo
             int inputIndex = 2;
 
-            //Bucle hasta que encontramos el último item del input.
+            // Bucle hasta que encontramos el último item del input.
             while (inputIndex < inputPath.Count - 1)
             {
-                Vector3 fromPt = outputPath[outputPath.Count - 1].transform.position;
-                Vector3 toPt = inputPath[inputIndex].transform.position;
-                RaycastHit hitInfo;
+                Vector3 fromPt = outputPath[outputPath.Count - 1].transform.position; // vector posición inicio nodo salida
+                Vector3 toPt = inputPath[inputIndex].transform.position; // vector posición siguiente nodo entrada
+
+                fromPt.y += 1.0f; // subo las alturas
+                toPt.y += 1.0f; // de los rayos esféricos
+
+                RaycastHit hitInfo; // no se necesita en sí pero el método siguiente lo necesita para funcionar
+
                 // Si el trazado de rayo ha fallado, se añade el último nodo al final de la lista de salida.
-                if (Physics.SphereCast(fromPt, 2f, toPt - fromPt, out hitInfo, (toPt - fromPt).magnitude))
+                if (Physics.SphereCast(fromPt, 0.5f, (toPt - fromPt), out hitInfo, (toPt - fromPt).magnitude, obstaculo))
                 {
-                    outputPath.Add(inputPath[inputIndex - 1]);
+                    outputPath.Add(inputPath[inputIndex - 1]); // añado el siguiente nodo a la lista de salida
                 }
 
                 // Se considera el siguiente nodo.
@@ -225,7 +232,8 @@ namespace UCM.IAV.Navegacion
 
             // Se ha llegado al final del camino de entrada, por lo que se añade el último nodo al de salida y se devuelve
             outputPath.Add(inputPath[inputPath.Count - 1]);
-            return outputPath;
+
+            return outputPath; // devuelvo la lista
         }
 
         // Reconstruir el camino, dando la vuelta a la lista de nodos 'padres' /previos que hemos ido anotando
