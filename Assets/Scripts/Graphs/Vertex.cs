@@ -8,6 +8,7 @@
 */
 using UnityEngine;
 using System;
+using UCM.IAV.Movimiento;
 
 namespace UCM.IAV.Navegacion
 {
@@ -15,7 +16,24 @@ namespace UCM.IAV.Navegacion
     public class Vertex : MonoBehaviour, IComparable<Vertex>
     {
         public int id; // Identificador del nodo
-        
+
+        private GameObject influence;
+
+        private void Start()
+        {
+            influence = transform.Find("Influence")?.gameObject;
+            if (influence != null)
+                influence.SetActive(false);
+        }
+
+        public void SetInfluence(bool doesInfluence, float costMultiPliyer = 1.0f)
+        {
+            if (influence != null)
+                influence.SetActive(doesInfluence);
+
+            GameManager.instance.UpdatePathCost(this, costMultiPliyer);
+        }
+
         public int CompareTo(Vertex other)
         {
             return this.id.CompareTo(other.id);

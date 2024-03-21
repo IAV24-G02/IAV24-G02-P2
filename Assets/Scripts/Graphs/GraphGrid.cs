@@ -66,7 +66,7 @@ namespace UCM.IAV.Navegacion
         private void LoadMap(string filename)
         {
             string path;
-            
+
             path = Application.dataPath + "/" + mapsDir + "/" + filename;
 
             try
@@ -163,17 +163,21 @@ namespace UCM.IAV.Navegacion
             neighbourVertex[vertexId] = new List<Vertex>();
             neighbourConnections[vertexId] = new Connection();
             Vector2[] pos = new Vector2[0];
-            if (get8) {
+            if (get8)
+            {
                 pos = new Vector2[8];
                 int c = 0;
-                for (i = row - 1; i <= row + 1; i++) {
-                    for (j = col - 1; j <= col; j++) {
+                for (i = row - 1; i <= row + 1; i++)
+                {
+                    for (j = col - 1; j <= col; j++)
+                    {
                         pos[c] = new Vector2(j, i);
                         c++;
                     }
                 }
             }
-            else {
+            else
+            {
                 pos = new Vector2[4];
                 pos[0] = new Vector2(col, row - 1);
                 pos[1] = new Vector2(col - 1, row);
@@ -181,7 +185,8 @@ namespace UCM.IAV.Navegacion
                 pos[3] = new Vector2(col, row + 1);
             }
 
-            foreach (Vector2 p in pos) {
+            foreach (Vector2 p in pos)
+            {
                 i = (int)p.y;
                 j = (int)p.x;
 
@@ -205,8 +210,8 @@ namespace UCM.IAV.Navegacion
 
         public override Vertex GetNearestVertex(Vector3 position)
         {
-            int col = (int) Math.Round(position.x / cellSize);
-            int row = (int) Math.Round(position.z / cellSize);
+            int col = (int)Math.Round(position.x / cellSize);
+            int row = (int)Math.Round(position.z / cellSize);
             Vector2 p = new Vector2(col, row);
             List<Vector2> explored = new List<Vector2>();
             Queue<Vector2> queue = new Queue<Vector2>();
@@ -258,42 +263,61 @@ namespace UCM.IAV.Navegacion
             return pos;
         }
 
-        public override void UpdateVertexCost(Vector3 position, float costMultiplier)
+        public override void UpdateVertexCost(Vertex v, float costMultiplier)
         {
-            Vertex v = GetNearestVertex(position);
-
             Vector2 gridPos = IdToGrid(v.id);
 
-            int x = (int) gridPos.y;
-            int y = (int) gridPos.x;
-
+            int x = (int)gridPos.y;
+            int y = (int)gridPos.x;
 
             if (x > 0 && x < numRows - 1 && y > 0 && y < numCols - 1)
             {
-                costsVertices[x, y] = defaultCost * costMultiplier * costMultiplier;
-                neighbourConnections[GridToId(y, x)].Cost = defaultCost * costMultiplier * costMultiplier;
+                costsVertices[x, y] = defaultCost * costMultiplier;
+                neighbourConnections[GridToId(y, x)].Cost = defaultCost * costMultiplier;
             }
 
-            if(x > 0)
+            if (x > 0)
             {
                 costsVertices[x - 1, y] = defaultCost * costMultiplier;
                 neighbourConnections[GridToId(y, x - 1)].Cost = defaultCost * costMultiplier;
             }
-            if(x < numRows - 1)
+            if (x < numRows - 1)
             {
                 costsVertices[x + 1, y] = defaultCost * costMultiplier;
                 neighbourConnections[GridToId(y, x + 1)].Cost = defaultCost * costMultiplier;
             }
-            if(y > 0)
+            if (y > 0)
             {
                 costsVertices[x, y - 1] = defaultCost * costMultiplier;
                 neighbourConnections[GridToId(y - 1, x)].Cost = defaultCost * costMultiplier;
             }
-            if(y < numCols - 1)
+            if (y < numCols - 1)
             {
                 costsVertices[x, y + 1] = defaultCost * costMultiplier;
                 neighbourConnections[GridToId(y + 1, x)].Cost = defaultCost * costMultiplier;
             }
+
+            // Para ver los costes en consola
+            string a = "";
+            for (int i = 0; i < numRows; i++)
+            {
+                for (int j = 0; j < numCols; j++)
+                {
+                    a += costsVertices[i, j] + " ";
+                }
+                a += "\n";
+            }
+            Debug.Log(a);
+            Debug.Log("=====================================");
+            string b = "";
+            for (int k = 0; k < neighbourConnections.Count; k++)
+            {
+                Connection c = neighbourConnections[k];
+                b += c.Cost + " ";
+                if (k != 0 && k % numCols == 0) b += "\n";
+            }
+            Debug.Log(b);
+            Debug.Log("=====================================");
         }
 
         private GameObject WallInstantiate(Vector3 position, int i, int j)
@@ -304,9 +328,9 @@ namespace UCM.IAV.Navegacion
             floor.name = floor.name.Replace("(Clone)", GridToId(j, i).ToString());
 
             //Derecha, Izquierda, Arriba, Abajo
-            bool[] dirs = new bool[4] { i < numRows - 1 && !mapVertices[i+1, j], 
-                                        i > 0 && !mapVertices[i - 1, j], 
-                                        j < numCols - 1 && !mapVertices[i, j + 1], 
+            bool[] dirs = new bool[4] { i < numRows - 1 && !mapVertices[i+1, j],
+                                        i > 0 && !mapVertices[i - 1, j],
+                                        j < numCols - 1 && !mapVertices[i, j + 1],
                                         j > 0 && !mapVertices[i, j - 1] };
 
             int connec = 0;
@@ -328,11 +352,11 @@ namespace UCM.IAV.Navegacion
                 return Instantiate(intersection3Prefab, position, Quaternion.Euler(0, 180, 0), this.gameObject.transform) as GameObject;
 
             //Interseccion muro
-            if(dirs[0] && dirs[1])
-                return Instantiate(wallPrefab1, position, Quaternion.Euler(0,90,0), this.gameObject.transform) as GameObject;
+            if (dirs[0] && dirs[1])
+                return Instantiate(wallPrefab1, position, Quaternion.Euler(0, 90, 0), this.gameObject.transform) as GameObject;
             if (dirs[2] && dirs[3])
                 return Instantiate(wallPrefab1, position, Quaternion.identity, this.gameObject.transform) as GameObject;
-            
+
             //Interseccion en giro
             if (dirs[0] && dirs[2])
                 return Instantiate(turnPrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;
@@ -342,7 +366,7 @@ namespace UCM.IAV.Navegacion
                 return Instantiate(turnPrefab, position, Quaternion.Euler(0, 90, 0), this.gameObject.transform) as GameObject;
             if (dirs[1] && dirs[3])
                 return Instantiate(turnPrefab, position, Quaternion.Euler(0, 180, 0), this.gameObject.transform) as GameObject;
-            
+
             //Muro libre
             if (!dirs[0] && !dirs[1] && !dirs[2] && !dirs[3])
                 return Instantiate(pillarPrefab, position, Quaternion.identity, this.gameObject.transform) as GameObject;

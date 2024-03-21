@@ -45,7 +45,7 @@ namespace UCM.IAV.Navegacion
             return vertices.Count;
         }
 
-        public virtual void UpdateVertexCost(Vector3 position, float costMultipliyer) { }
+        public virtual void UpdateVertexCost(Vertex v, float costMultipliyer) { }
 
         public virtual Vertex GetNearestVertex(Vector3 position)
         {
@@ -111,6 +111,7 @@ namespace UCM.IAV.Navegacion
             return new List<Vertex>();
         }
 
+        // Encuentra caminos óptimos
         public List<Vertex> GetPathAstar(GameObject startObject, GameObject endObject, Heuristic heuristic = null)
         {
             Vertex startNode = GetNearestVertex(startObject.transform.position);

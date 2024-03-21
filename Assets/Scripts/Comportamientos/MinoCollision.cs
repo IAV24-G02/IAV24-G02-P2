@@ -6,8 +6,6 @@
    Autor: Federico Peinado 
    Contacto: email@federicopeinado.com
 */
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace UCM.IAV.Movimiento
@@ -16,7 +14,8 @@ namespace UCM.IAV.Movimiento
     {
         private void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.GetComponent<Teseo>() != null)
+            // Por Duck Typing, si el objeto con el que colisiona es el Avatar, reiniciamos la escena
+            if (!ReferenceEquals(collision.gameObject.GetComponent<Teseo>(), null))
                 GameManager.instance.RestartScene();
         }
     }

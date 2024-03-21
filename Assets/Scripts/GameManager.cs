@@ -207,9 +207,9 @@ namespace UCM.IAV.Movimiento
         }
 
         // Cambia el coste de un nodo
-        public void UpdatePathCost(Vector3 position, float costMultipliyer)
+        public void UpdatePathCost(Vertex v, float costMultipliyer)
         {
-            theseusGraph.UpdatePathCost(position, costMultipliyer);
+            theseusGraph.UpdatePathCost(v, costMultipliyer);
         }
 
         // Cambia el framerate

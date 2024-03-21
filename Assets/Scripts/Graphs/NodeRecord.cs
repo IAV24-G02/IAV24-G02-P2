@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UCM.IAV.Navegacion;
 
 public class NodeRecord : IComparable<NodeRecord>
@@ -18,10 +19,20 @@ public class NodeRecord : IComparable<NodeRecord>
         EstimatedTotalCost = estimatedTotalCost;
     }
 
+    public override bool Equals(object obj)
+    {
+        return obj is NodeRecord record && EqualityComparer<Vertex>.Default.Equals(Node, record.Node);
+    }
+
     public int CompareTo(NodeRecord other)
     {
         if (other == null) 
             return 1;
         return EstimatedTotalCost.CompareTo(other.EstimatedTotalCost);
+    }
+
+    public override int GetHashCode()
+    {
+        return Node.GetHashCode();
     }
 }

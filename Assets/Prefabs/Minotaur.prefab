@@ -471,6 +471,7 @@ GameObject:
   - component: {fileID: 8357271194336293764}
   - component: {fileID: 4640049392622445962}
   - component: {fileID: 5918650503485696262}
+  - component: {fileID: -1867100446368811988}
   - component: {fileID: 6349335116925598583}
   - component: {fileID: 515695627255792643}
   - component: {fileID: 5911507637772140075}
@@ -625,6 +626,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13684ffe492191840b7059313990e5a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-1867100446368811988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5856985828648263931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10e277bdbe6a9484b960219181fcf569, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  costMutipliyer: 5
+  detectionRadio: 5
 --- !u!114 &6349335116925598583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -637,8 +652,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb303698e0b96d42abb22624f2c6411, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  costMutipliyer: 5
-  detectionRadio: 5
 --- !u!114 &515695627255792643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -655,11 +668,11 @@ MonoBehaviour:
   prioridad: 1
   objetivo: {fileID: 5587432493576105249, guid: c391d0bafd410864ca5d0cc1bd083ed3,
     type: 3}
-  radioObjetivo: 0.2
-  radioRalentizado: 3
-  fuerzaRalentizado: 4
-  avoidQuantity: 5
-  distance: 7
+  targetRadius: 0
+  slowingRadius: 5
+  slowingForce: 3
+  avoidQuantity: 0
+  raycastDistance: 7
 --- !u!114 &5911507637772140075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -667,7 +680,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5856985828648263931}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ffa41cffd326f64b856316d349eca5c, type: 3}
   m_Name: 
@@ -675,8 +688,8 @@ MonoBehaviour:
   peso: 1
   prioridad: 1
   objetivo: {fileID: 0}
-  maxTime: 2
-  minTime: 1
+  offset: 0.2
+  waitingTime: 0.2
 --- !u!1 &6227627562668922387
 GameObject:
   m_ObjectHideFlags: 0
