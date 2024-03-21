@@ -67,7 +67,7 @@ namespace UCM.IAV.Navegacion
         {
             string path;
 
-            path = Application.dataPath + "/" + mapsDir + "/" + filename;
+            path = Application.streamingAssetsPath + "/" + mapsDir + "/" + filename;
 
             try
             {
