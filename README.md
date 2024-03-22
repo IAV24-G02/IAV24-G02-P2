@@ -357,6 +357,40 @@ class NodeRecord:
     EstimatedTotalCost: float   # Coste total estimado hasta el nodo seleccionado
 ```
 
+Finalmente, otra característica a destacar del proyecto es que parte del HUD de la interfaz gráfica (tamaño de la cuadrícula, el número de baldosas visitadas, la longitud del camino, el coste del camino, el tiempo en milisegundos que ha tardado en encontrar el camino, el porcentaje del tiempo que ha tardado en encontrar el camino respecto al tiempo total de ejecución) se ha implementado de forma que **solo sirve para el primer camino encontrado** tras realizar _clic derecho_ y no para los siguientes. Se ha considerado que, si no fuese así, el HUD se vería muy cambiante y no sería útil para el usuario pues constantemente se estaría actualizando y no le daría tiempo a leer la información, además de que no tendría sentido obtener esa información según fuese avanzando el `Avatar` porque solo queremos la información de la primera búsqueda realizada mediante A*. Sin embargo, debido al movimiento constante de los `Minotauros` es muy probable que toda esa información cambie. En caso de que se quisiera actualizar el HUD para cada camino encontrado, simplemente sería quitar las condiciones de `if (variable == 0)` en el método de `UpdatePathInfo()` en `TheseusGraph.cs`, que es el caso para el primer cambio de valor de las variables y por eso solo se actualiza el HUD para el primer camino. Luego, para la variable `pathVisited` habría que cambiar su cálculo para obtener el número de nodos totales visitados. A continuación se muestra el código de `UpdatePathInfo()` en `TheseusGraph.cs`:
+
+```csharp
+private void UpdatePathInfo()
+{
+    # Si es la primera vez que se llama a la función
+    if (pathLength == 0) 
+    {
+        pathLength = path.Count - 1;
+        GameManager.instance.UpdateLength(pathLength);
+    }
+    pathVisited = pathLength - path.Count + 1;
+    GameManager.instance.UpdateVisited(pathVisited);
+     # Si es la primera vez que se llama a la función
+    if (pathCost == 0)
+    {
+        pathCost = graph.GetPathCost(path);
+        GameManager.instance.UpdateCost(pathCost);
+    }
+     # Si es la primera vez que se llama a la función
+    if (pathSearchTime == 0)
+    {
+        pathSearchTime = graph.GetPathSearchTime(path);
+        GameManager.instance.UpdateSearchTime(pathSearchTime);
+    }
+     # Si es la primera vez que se llama a la función
+    if (pathPercentageTimeConsumed == 0)
+    {
+        pathPercentageTimeConsumed = graph.GetPathSearchTimePercentage(path);
+        GameManager.instance.UpdateSearchTimePercentage(pathPercentageTimeConsumed);
+    }
+}
+```
+
 ## Licencia
 
 Yi (Laura) Wang Qiu, Agustín Castro De Troya, Ignacio Ligero Martín, Alfonso Jaime Rodulfo Guío, autores de la documentación, código y recursos de este trabajo, concedemos permiso permanente a los profesores de la Facultad de Informática de la Universidad Complutense de Madrid para utilizar nuestro material, con sus comentarios y evaluaciones, con fines educativos o de investigación; ya sea para obtener datos agregados de forma anónima como para utilizarlo total o parcialmente reconociendo expresamente nuestra autoría.
